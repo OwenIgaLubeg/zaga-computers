@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firebase Test</title>
+</head>
+<body>
+<h2>Testing Firebase Connection...</h2>
+<pre id="output"></pre>
+
+<script type="module">
+    // Import Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDTKJ5WuSPBbIwVXKjsL2h_4K360qIJzb8",
+      authDomain: "zaga-tech-store.firebaseapp.com",
+      projectId: "zaga-tech-store",
+      storageBucket: "zaga-tech-store.firebasestorage.app",
+      messagingSenderId: "402026502827",
+      appId: "1:402026502827:web:664170cc19966073f435ee",
+      measurementId: "G-NN99SC43XX"
+    };
+
+    try {
+      const app = initializeApp(firebaseConfig);
+      getAnalytics(app);
+      document.getElementById("output").textContent = "✅ Firebase Initialized Successfully!";
+      console.log("Firebase initialized:", app);
+    } catch (error) {
+      document.getElementById("output").textContent = "❌ Firebase Initialization Failed:\n" + error;
+      console.error(error);
+    }
+</script>
+</body>
+</html>

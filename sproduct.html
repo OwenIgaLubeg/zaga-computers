@@ -4,250 +4,337 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details</title>
+    <title>ZAGA Technologies | Product Details</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <link rel="stylesheet" href="style.css">
-
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/v4-shims.css">
 
+    <!-- Page-specific styling -->
     <style>
-        .small-img-group{
-            display: flex;
-            justify-content: space-between;
-        }
-        .small-img-col{
-            flex-basis: 24%;
-            cursor: pointer;
+        body {
+          font-family: 'Poppins', sans-serif;
+          background-color: #f5f7fa;
+          margin: 0;
+          padding: 0;
         }
 
-        .sproduct select{
-            display: block;
-            padding: 5px 10px;
+        .product-container {
+          max-width: 1200px;
+          margin: 120px auto 60px;
+          background: #fff;
+          border-radius: 12px;
+          padding: 40px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+          display: flex;
+          gap: 40px;
+          align-items: flex-start;
         }
 
-        .sproduct input{
-            width: 50px;
-            height: 40px;
-            padding-left: 10px;
-            font-size: 16px;
-            margin-right: 10px;
+        .product-image {
+          flex: 1;
+          text-align: center;
         }
 
-        .sproduct input:focus{
-            outline: none;
+        .product-image img {
+          width: 100%;
+          max-width: 400px;
+          border-radius: 10px;
+          transition: transform 0.3s ease;
         }
 
-        .buy-btn {
-            background: coral;
-            opacity: 1;
-            transition: 0.3s all;
+        .product-image img:hover {
+          transform: scale(1.03);
+        }
+
+        .product-info {
+          flex: 2;
+          color: #333;
+        }
+
+        .product-info h2 {
+          font-size: 2rem;
+          color: #1a1a1a;
+          margin-bottom: 15px;
+        }
+
+        .product-info h3 {
+          color: #007bff;
+          font-size: 1.6rem;
+          margin-bottom: 20px;
+        }
+
+        .product-info p {
+          font-size: 1.1rem;
+          line-height: 1.6;
+          color: #555;
+          margin-bottom: 25px;
+        }
+
+        .product-actions {
+          display: flex;
+          gap: 15px;
+        }
+
+        .btn {
+          padding: 10px 25px;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: 0.3s ease;
+        }
+
+        .btn-primary {
+          background-color: #007bff;
+          color: white;
+        }
+
+        .btn-primary:hover {
+          background-color: #0056b3;
+        }
+
+        .btn-secondary {
+          background-color: #6c757d;
+          color: white;
+        }
+
+        .btn-secondary:hover {
+          background-color: #5a6268;
+        }
+
+        .small-images {
+          display: flex;
+          gap: 10px;
+          margin-top: 20px;
+          justify-content: center;
+        }
+
+        .small-images img {
+          width: 80px;
+          height: 80px;
+          object-fit: cover;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: transform 0.3s;
+        }
+
+        .small-images img:hover {
+          transform: scale(1.05);
+        }
+
+        .back-link {
+          text-align: center;
+          margin: 40px 0;
+        }
+
+        .back-link a {
+          color: #007bff;
+          text-decoration: none;
+          font-weight: 600;
+          transition: 0.3s;
+        }
+
+        .back-link a:hover {
+          text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+          .product-container {
+            flex-direction: column;
+            padding: 20px;
+          }
+
+          .product-image img {
+            max-width: 100%;
+          }
         }
     </style>
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 fixed-top">
-        <div class="container">
-          <a class="navbar-brand" href="index.html">ShopMe</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+<!-- Navbar (unchanged) -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white py-3 fixed-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+            <img src="./img/zaga-logo.jpg" alt="ZAGA Technologies Logo" style="height: 40px; width: auto; margin-right: 8px;">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
             <span><i id="bar" class="fas fa-bars"></i></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="index.html">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="shop.html">Shop</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#">Contact Us</a>
-              </li>
-              
-              <li class="nav-item">
-                <i class="fas fa-search"></i>
-                <i class="fas fa-shopping-bag"></i>
-              </li>
-              
-          </div>
+                <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="shop.html">Our Store</a></li>
+                <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin-dashboard.html">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.html">Sign-In/Up</a></li>
+                <li class="nav-item d-flex align-items-center">
+                    <a href="cart.html" class="cart-link ms-2" title="View Cart"><i class="fas fa-shopping-bag"></i></a>
+                </li>
+            </ul>
         </div>
-      </nav>
-    
-      <section class="container sproduct my-5 pt-5">
-          <div class="row mt-5">
-              <div class="col-lg-5 col-md-12 col-12">
-                  <img class="img-fluid w-100 pb-1" src="img/shop/1.jpg" id="MainImg" alt="">
+    </div>
+</nav>
 
-                  <div class="small-img-group">
-                      <div class="small-img-col">
-                          <img src="img/shop/1.jpg" width="100%" class="small-img" alt="">
-                      </div>
-                      <div class="small-img-col">
-                        <img src="img/shop/24.jpg" width="100%" class="small-img" alt="">
-                    </div>
-                    <div class="small-img-col">
-                        <img src="img/shop/25.jpg" width="100%" class="small-img" alt="">
-                    </div>
-                    <div class="small-img-col">
-                        <img src="img/shop/26.jpg" width="100%" class="small-img" alt="">
-                    </div>
-                  </div>
-              </div>
-              <div class="col-lg-6 col-md-12 col-12">
-                <h6>Home / T-Shirt</h6>
-                <h3 class="py-4">Men's Fashion T-shirt</h3>
-                <h2>₹ 350</h2>
-                <select class="my-3">
-                    <option>Size</option>
-                    <option>S</option>
-                    <option>M</option>
-                    <option>L</option>
-                    <option>XL</option>
-                </select>
-                <input type="number" value="1">
-                <button class="buy-btn">Add To Card</button>
-                <h4 class="mt-5 mb-5">Product Details</h4>
-                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae necessitatibus consectetur, eligendi odit, at libero hic nihil officiis modi voluptates illo atque veniam, perferendis fugit qui cumque tempore optio quidem?</span>
-              </div>
-          </div>
-      </section>
+<!--Product Section -->
+<section class="product-container">
+    <div class="product-image">
+        <img id="mainImage" src="img/shop/default.jpg" alt="Product Image">
+        <div class="small-images" id="smallImages"></div>
+    </div>
 
-      <section id="featured" class="my-5 pb-5">
-        <div class="container text-center mt-5 py-5">
-            <h3>Related Produts</h3>
-            <hr class="mx-auto">
+    <div class="product-info">
+        <h2 id="productName">Loading...</h2>
+        <h3 id="productPrice">Loading...</h3>
+        <p id="productDescription">Loading product details...</p>
+        <div class="product-actions">
+            <button class="btn btn-primary">Edit Product</button>
+            <button class="btn btn-secondary">Delete Product</button>
         </div>
-        <div class="row mx-auto container-fluid">
-            <div class="product text-center col-lg-3 col-md-4 col-12">
-                <img class="img-fluid mb-3"src="img/featured/1.jpg" alt="">
-                <div class="star">
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                </div>
-                <h5 class="p-name">Casual sneakers</h5>
-                <h4 class="p-price">₹ 2500</h4>
-                <button class="buy-btn">Buy Now</button>
-            </div>
-            <div class="product text-center col-lg-3 col-md-4 col-12">
-              <img class="img-fluid mb-3"src="img/featured/3.jpg" alt="">
-              <div class="star">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-              </div>
-              <h5 class="p-name">Travel Bagpack</h5>
-              <h4 class="p-price">₹ 999</h4>
-              <button class="buy-btn">Buy Now</button>
-          </div>
-          <div class="product text-center col-lg-3 col-md-4 col-12">
-              <img class="img-fluid mb-3"src="img/featured/4.jpg" alt="">
-              <div class="star">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-              </div>
-              <h5 class="p-name">Beanie</h5>
-              <h4 class="p-price">₹ 199</h4>
-              <button class="buy-btn">Buy Now</button>
-          </div>
-          <div class="product text-center col-lg-3 col-md-4 col-12">
-              <img class="img-fluid mb-3"src="img/featured/2.jpg" alt="">
-              <div class="star">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-              </div>
-              <h5 class="p-name">Party Sneakers</h5>
-              <h4 class="p-price">₹ 799</h4>
-              <button class="buy-btn">Buy Now</button>
-          </div>
+    </div>
+</section>
+
+<div class="back-link">
+    <a href="admin-dashboard.html"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
+</div>
+
+<!--  Footer (unchanged) -->
+<footer class="mt-5 py-5">
+    <div class="row container mx-auto pb-5">
+        <div class="footer-one col-lg-3 col-md-6 col-12">
+            <h5>ZAGA-Technologies</h5>
+            <p class="pt-3">ZAGA-Technologies is one of Uganda’s leading independent retailers of laptops, printers and Desktops Computers. We stock hundreds of products from the big brands like Lenovo, HP, Dell, and Microsoft all at the best prices.</p>
         </div>
-
-    </section>
-
-
-
-    <footer class="mt-5 py-5">
-        <div class="row container mx-auto pb-5">
-            <div class="footer-one col-lg-3 col-md-6 col-12">
-                <h5>ShopMe</h5>
-                <p class="pt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-                    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
-                    numquam blanditiis.</p>
+        <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
+            <h5 class="pb-2">Quick Links</h5>
+            <ul class="text-uppercase list-unstyled">
+                <li><a href="shop.html">Our store</a></li>
+                <li><a href="cart.html">Cart</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="admin-dashboard.html">Dashboard</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </div>
+        <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
+            <h5 class="pb-2">Contact Us</h5>
+            <div>
+                <h6 class="text-uppercase">Address</h6>
+                <p>Kabaka Kintu House Level-1, Shop No: C-03</p>
+                <p>Opp King Fahad Plaza - Kampala Rd.</p>
             </div>
-            <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
-                <h5 class="pb-2">Featured</h5>
-                <ul class="text-uppercase list-unstyled">
-                    <li><a href="#">Men</a></li>
-                    <li><a href="#">Women</a></li>
-                    <li><a href="#">Boys</a></li>
-                    <li><a href="#">Girls</a></li>
-                    <li><a href="#">New Arrivals</a></li>
-                    <li><a href="#">Watches</a></li>
-                    <li><a href="#">Shoes</a></li>
-                </ul>
+            <div>
+                <h6 class="text-uppercase">Phone</h6>
+                <p>+256 700706809</p>
             </div>
-            <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
-                <h5 class="pb-2">Contact Us</h5>
-                <div>
-                    <h6 class="text-uppercase">Address</h6>
-                    <p>8th d road, sardarpura jodhpur</p>
-                </div>
-                <div>
-                    <h6 class="text-uppercase">Phone</h6>
-                    <p>0291-2612836</p>
-                </div>
-                <div>
-                    <h6 class="text-uppercase">Email</h6>
-                    <p>ShopMe.help@gmail.com</p>
-                </div>
-            </div>
-            <div class="footer-one col-lg-3 col-md-6 col-12">
-                <h5 class="pb-2">Instagram</h5>
-                <div class="row">
-                    <img class="img-fluid w-25 h-100 m-2"src="img/insta/1.jpg" alt="">
-                    <img class="img-fluid w-25 h-100 m-2"src="img/insta/2.jpg" alt="">
-                    <img class="img-fluid w-25 h-100 m-2"src="img/insta/3.jpg" alt="">
-                    <img class="img-fluid w-25 h-100 m-2"src="img/insta/4.jpg" alt="">
-                    <img class="img-fluid w-25 h-100 m-2"src="img/insta/5.jpg" alt="">
-                </div>
+            <div>
+                <h6 class="text-uppercase">Email</h6>
+                <p>sales2.zagatechnologiesltd@gmail.com</p>
             </div>
         </div>
-        
-        <div class="copyright mt-5">
-            <div class="row container mx-auto">
-                <div class="col-lg-3 col-md-6 col-12 mb-4">
-                    <img src="img/payment.png" alt="">
-                </div>
-                <div class="col-lg-4 col-md-6 col-12 text-nowrap mb-2">
-                    <p>ShopMe © 2021. All Rights Reserved </p>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <a href=""><i class="fab fa-facebook-f"></i></a>
-                    <a href=""><i class="fab fa-instagram"></i></a>
-                    <a href=""><i class="fab fa-twitter"></i></a>
-                </div>
+        <div class="footer-one col-lg-3 col-md-6 col-12">
+            <h5 class="pb-2">Brand Partners</h5>
+            <div class="row">
+                <img class="img-fluid w-25 h-100 m-2" src="img/brand/apple.png" alt="">
+                <img class="img-fluid w-25 h-100 m-2" src="img/brand/samsung.png" alt="">
+                <img class="img-fluid w-25 h-100 m-2" src="img/brand/hp%20logo.png" alt="">
+                <img class="img-fluid w-25 h-100 m-2" src="img/brand/dell.png" alt="">
+                <img class="img-fluid w-25 h-100 m-2" src="img/brand/lenovo.png" alt="">
             </div>
         </div>
-        </footer>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
-    <script src="sprod.js"></script>
+    <div class="copyright mt-5">
+        <div class="row container mx-auto">
+            <div class="col-lg-3 col-md-6 col-12 mb-4">
+                <img src="img/payment.png" alt="">
+            </div>
+            <div class="col-lg-4 col-md-6 col-12 text-nowrap mb-2">
+                <p>Zaga Technologies © 2025. All Rights Reserved</p>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
 
+<!-- Firebase Script -->
+<script type="module">
+    import { db } from './js/firebase-config.js';
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get('id');
+
+    async function loadProduct() {
+      if (!productId) return;
+
+      try {
+        const docRef = doc(db, "products", productId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById('productName').textContent = data.name;
+
+          const rawPrice = data.price ?? 0;
+          const priceNumber = (typeof rawPrice === 'number')
+            ? rawPrice
+            : Number(String(rawPrice).replace(/[^0-9.-]+/g,"")) || 0;
+          document.getElementById('productPrice').textContent = "UGX " + priceNumber.toLocaleString();
+
+          document.getElementById('productDescription').textContent = data.description;
+          document.getElementById('mainImage').src = data.image || 'img/shop/default.jpg';
+
+          // Render small images if available
+          const smallImagesContainer = document.getElementById('smallImages');
+          smallImagesContainer.innerHTML = '';
+          if (Array.isArray(data.smallImages) && data.smallImages.length) {
+            data.smallImages.forEach(src => {
+              const imgEl = document.createElement('img');
+              imgEl.src = src;
+              imgEl.alt = data.name || 'product';
+              imgEl.onclick = () => document.getElementById('mainImage').src = src;
+              smallImagesContainer.appendChild(imgEl);
+            });
+          }
+
+        } else {
+          document.getElementById('productName').textContent = "Product Not Found";
+        }
+
+      } catch (error) {
+        console.error("Error loading product:", error);
+        document.getElementById('productName').textContent = "Error loading product details.";
+      }
+    }
+
+    loadProduct();
+
+    // Only show admin actions for logged-in admin
+    document.addEventListener("DOMContentLoaded", () => {
+      const adminActions = document.querySelector('.product-actions');
+      if (adminActions && !localStorage.getItem('adminLoggedIn')) {
+        adminActions.style.display = 'none';
+      }
+    });
+</script>
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+<script type="module" src="./js/firebase-config.js"></script>
 </body>
 </html>

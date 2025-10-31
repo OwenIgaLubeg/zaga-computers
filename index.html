@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShopMe</title>
+    <title>ZAGA-TECHNOLOGIES</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
@@ -14,80 +14,112 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/v4-shims.css">
 </head>
 <body>
-   
-    <!-- Navbar -->
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 fixed-top">
-        <div class="container">
-          <a class="navbar-brand" href="#">ShopMe</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white py-3 fixed-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+            <img src="./img/zaga-logo.jpg" alt="ZAGA Technologies Logo" style="height: 40px; width: auto; margin-right: 8px;">
+            <!--<span>ZAGA-TECHNOLOGIES</span>-->
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span><i id="bar" class="fas fa-bars"></i></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " aria-current="page" href="shop.html">Shop</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " aria-current="page" href="#">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#">Contact Us</a>
-              </li>
-              
-              <li class="nav-item">
-                <i class="fas fa-search"></i>
-                <i class="fas fa-shopping-bag"></i>
-              </li>
-              
-          </div>
+
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="shop.html">Our Store</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="about.html">About Us</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="contact.html">Contact Us</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="admin-dashboard.html">Dashboard</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="login.html">Sign-In/Up</a>
+                </li>
+
+                <li class="nav-item d-flex align-items-center">
+                    <!-- Search Form -->
+                    <!--<form id="searchForm" action="search.html" method="get" class="search-bar">
+                        <input type="text" name="query" placeholder="Search for a product..." required>
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                    </form>-->
+
+                    <!-- Shopping Cart Icon -->
+                    <a href="cart.html" class="cart-link ms-2" title="View Cart">
+                        <i class="fas fa-shopping-bag"></i>
+                    </a>
+                </li>
+
+            </ul>
         </div>
-      </nav>
+    </div>
+</nav>
 
-      <section id="home">
+
+<section id="home">
           <div class="container">
-              <h5>New Arrivals</h5>
-              <h1><span>Best Price!</span>This Year</h1>
-              <p>Exciting new offers on all products from<br>a wide range of fashion brands.</p>
-              <button>Shop Now</button>
+              <h5>Best Prices!</h5>
+              <h1><span>ZAGA</span>technologies</h1>
+              <p>FINANCING DIGITAL EMPOWERMENT<br>buy now & pay later.</p>
+              <div class="link"><a href="shop.html"
+                                   class="theme-btn btn-style-two"><span>Shop Now</span></a>
+              </div>
+             <!-- <button>Shop Now</button>-->
           </div>
       </section>
 
-      <section id="brand" class="container">
-          <div class="row m-0 py-5">
-              <img class="img-fluid col-lg-2 col-md-4 col-6" src="./img/brand/1.png" alt="">
-              <img class="img-fluid col-lg-2 col-md-4 col-6" src="./img/brand/2.png" alt="">
-              <img class="img-fluid col-lg-2 col-md-4 col-6" src="./img/brand/3.png" alt="">
-              <img class="img-fluid col-lg-2 col-md-4 col-6" src="./img/brand/4.png" alt="">
-              <img class="img-fluid col-lg-2 col-md-4 col-6" src="./img/brand/5.png" alt="">
-              <img class="img-fluid col-lg-2 col-md-4 col-6" src="./img/brand/6.png" alt="">
-          </div>
-      </section>
+    <section id="brand" class="brand-section">
+        <div class="company-tagline">
+            <h3>Powered by ZAGA Technologies — Innovating Your Digital Future.</h3>
+        </div>
+    </section>
 
-      <section id="new" class="w-100">
+
+    <section id="new" class="w-100">
           <div class="row p-0 m-0">
               <div class="one col-lg-4 col-md-12 col-12 p-0">
                   <img class="img-fluid" src="./img//new/1.jpg" alt="">
                   <div class="details">
-                      <h2>Sneakers</h2>
-                      <button class="text-uppercase">Shop Now</button>
+                      <h2>Computers</h2><div class="link"><a href="shop.html"
+                                                            class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                  </div>
+                      <!--<button class="text-uppercase">Shop Now</button>-->
                   </div>
               </div>
               <div class="one col-lg-4 col-md-12 col-12 p-0">
                 <img class="img-fluid" src="./img//new/4.jpg" alt="">
                 <div class="details">
-                    <h2>Fashion</h2>
-                    <button class="text-uppercase">Shop Now</button>
+                    <h2>Smart Phones</h2>
+                    <div class="link"><a href="shop.html"
+                                         class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                    </div>
+                    <!--<button class="text-uppercase">Shop Now</button>-->
                 </div>
             </div>
             <div class="one col-lg-4 col-md-12 col-12 p-0">
                 <img class="img-fluid" src="./img//new/3.jpg" alt="">
                 <div class="details">
-                    <h2>Watches</h2>
-                    <button class="text-uppercase">Shop Now</button>
+                    <h2>Printers</h2>
+                    <div class="link"><a href="shop.html"
+                                         class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                    </div>
+                    <!--<button class="text-uppercase">Shop Now</button>-->
                 </div>
             </div>
           </div>
@@ -98,11 +130,11 @@
           <div class="container text-center mt-5 py-5">
               <h3>Featured</h3>
               <hr class="mx-auto">
-              <p>Check out our latest Diwali collection.</p>
+              <p>Check out our latest Stock.</p>
           </div>
           <div class="row mx-auto container-fluid">
               <div class="product text-center col-lg-3 col-md-4 col-12">
-                  <img class="img-fluid mb-3"src="img/featured/1.jpg" alt="">
+                  <img class="img-fluid mb-3" src="img/featured/1.jpg" alt="">
                   <div class="star">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -110,12 +142,16 @@
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                   </div>
-                  <h5 class="p-name">Casual sneakers</h5>
-                  <h4 class="p-price">₹ 2500</h4>
-                  <button class="buy-btn">Buy Now</button>
+                  <h5 class="p-name">MacBook Pro Laptops</h5>
+                  <h5 class="p-name">price ranges from</h5>
+                  <h4 class="p-price">2,000,000/=</h4>
+                  <div class="link"><a href="shop.html"
+                                       class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                  </div>
+                  <!--<button class="buy-btn">Buy Now</button>-->
               </div>
               <div class="product text-center col-lg-3 col-md-4 col-12">
-                <img class="img-fluid mb-3"src="img/featured/3.jpg" alt="">
+                <img class="img-fluid mb-3" src="img/featured/3.jpg" alt="">
                 <div class="star">
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
@@ -123,9 +159,13 @@
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
                 </div>
-                <h5 class="p-name">Travel Bagpack</h5>
-                <h4 class="p-price">₹ 999</h4>
-                <button class="buy-btn">Buy Now</button>
+                <h5 class="p-name">SamSung Fold phones</h5>
+                  <h5 class="p-name">price ranges from</h5>
+                <h4 class="p-price">1,500,000/=</h4>
+                  <div class="link"><a href="shop.html"
+                                       class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                  </div>
+                <!--<button class="buy-btn">Buy Now</button>-->
             </div>
             <div class="product text-center col-lg-3 col-md-4 col-12">
                 <img class="img-fluid mb-3"src="img/featured/4.jpg" alt="">
@@ -136,9 +176,13 @@
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
                 </div>
-                <h5 class="p-name">Beanie</h5>
-                <h4 class="p-price">₹ 199</h4>
-                <button class="buy-btn">Buy Now</button>
+                <h5 class="p-name">Ultra Desktops</h5>
+                <h5 class="p-name">price ranges from</h5>
+                <h4 class="p-price">1,700,000/=</h4>
+                <div class="link"><a href="sproduct.html"
+                                     class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                </div>
+                <!--<button class="buy-btn">Buy Now</button>-->
             </div>
             <div class="product text-center col-lg-3 col-md-4 col-12">
                 <img class="img-fluid mb-3"src="img/featured/2.jpg" alt="">
@@ -149,9 +193,13 @@
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
                 </div>
-                <h5 class="p-name">Party Sneakers</h5>
-                <h4 class="p-price">₹ 799</h4>
-                <button class="buy-btn">Buy Now</button>
+                <h5 class="p-name">Digital Printers</h5>
+                <h5 class="p-name">price ranges from</h5>
+                <h4 class="p-price">800,000/=</h4>
+                <div class="link"><a href="sproduct.html"
+                                     class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                </div>
+                <!--<button class="buy-btn">Buy Now</button>-->
             </div>
           </div>
 
@@ -159,17 +207,21 @@
 
       <section id="banner" class="my-5 py-5">
           <div class="container">
-              <h4>Diwali Sale</h4>
+              <h4>Credit Sale</h4>
               <h1>New Collection<br>UP TO 60% OFF!</h1>
-              <button>Explore Now</button>
+              <h4>BUY NOW & PAY LATER</h4>
+              <div class="link"><a href="shop.html"
+                                   class="theme-btn btn-style-two"><span>Shop Now</span></a>
+              </div>
+              <!--<button>Explore Now</button>-->
           </div>
       </section>
 
       <section id="clothes" class="my-5">
         <div class="container text-center mt-5 py-5">
-            <h3>Dresses and Jumpsuits</h3>
+            <h3>LAPTOPS</h3>
             <hr class="mx-auto">
-            <p>Check out our latest Diwali collection.</p>
+            <p>Checkout our latest Laptops collection.</p>
         </div>
         <div class="row mx-auto container-fluid">
             <div class="product text-center col-lg-3 col-md-4 col-12">
@@ -181,9 +233,13 @@
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
                 </div>
-                <h5 class="p-name">Pantsuit</h5>
-                <h4 class="p-price">₹ 2500</h4>
-                <button class="buy-btn">Buy Now</button>
+                <h5 class="p-name">Accer Aspire3 15.6</h5>
+                <h5 class="p-name">Full HD Laptop Intel core i5</h5>
+                <h4 class="p-price">2,000,000/=</h4>
+                <div class="link"><a href="sproduct.html"
+                                     class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                </div>
+                <!--<button class="buy-btn">Buy Now</button>-->
             </div>
             <div class="product text-center col-lg-3 col-md-4 col-12">
               <img class="img-fluid mb-3"src="img/clothes/2.jpg" alt="">
@@ -194,9 +250,13 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
               </div>
-              <h5 class="p-name">Dress</h5>
-              <h4 class="p-price">₹ 999</h4>
-              <button class="buy-btn">Buy Now</button>
+              <h5 class="p-name">13" MacBook Pro</h5>
+                <h5 class="p-name">2.3GHz 8GB RAM 256GB SSD</h5>
+              <h4 class="p-price">4,000,000/=</h4>
+                <div class="link"><a href="sproduct.html"
+                                     class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                </div>
+                <!--<button class="buy-btn">Buy Now</button>-->
           </div>
           <div class="product text-center col-lg-3 col-md-4 col-12">
               <img class="img-fluid mb-3"src="img/clothes/3.jpg" alt="">
@@ -207,12 +267,16 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
               </div>
-              <h5 class="p-name">Summer shirt</h5>
-              <h4 class="p-price">₹ 199</h4>
-              <button class="buy-btn">Buy Now</button>
+              <h5 class="p-name">HP 250 G9</h5>
+              <h5 class="p-name">with 512GB SSD</h5>
+              <h4 class="p-price">1,550,000/=</h4>
+              <div class="link"><a href="sproduct.html"
+                                   class="theme-btn btn-style-two"><span>Shop Now</span></a>
+              </div>
+              <!--<button class="buy-btn">Buy Now</button>-->
           </div>
           <div class="product text-center col-lg-3 col-md-4 col-12">
-              <img class="img-fluid mb-3"src="img/clothes/1.jpg" alt="">
+              <img class="img-fluid mb-3"src="img/clothes/4.jpg" alt="">
               <div class="star">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -220,9 +284,13 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
               </div>
-              <h5 class="p-name">Pantsuit</h5>
-              <h4 class="p-price">₹ 799</h4>
-              <button class="buy-btn">Buy Now</button>
+              <h5 class="p-name">Accer Predator</h5>
+              <h5 class="p-name">Helios Neo 16</h5>
+              <h4 class="p-price">call for price</h4>
+              <div class="link"><a href="sproduct.html"
+                                   class="theme-btn btn-style-two"><span>Shop Now</span></a>
+              </div>
+              <!--<button class="buy-btn">Buy Now</button>-->
           </div>
         </div>
 
@@ -230,9 +298,9 @@
 
     <section id="watches" class="my-5">
         <div class="container text-center mt-5 py-5">
-            <h3>Watches</h3>
+            <h3>Desktops</h3>
             <hr class="mx-auto">
-            <p>Check out our latest Diwali collection.</p>
+            <p>Checkout our latest Desktop collection.</p>
         </div>
         <div class="row mx-auto container-fluid">
             <div class="product text-center col-lg-3 col-md-4 col-12">
@@ -244,9 +312,13 @@
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
                 </div>
-                <h5 class="p-name">Aqua Sport</h5>
-                <h4 class="p-price">₹ 4500</h4>
-                <button class="buy-btn">Buy Now</button>
+                <h5 class="p-name">Apple imac 27-inch</h5>
+                <h5 class="p-name">5k-2020-3.1GHz 6-core i5</h5>
+                <h4 class="p-price">call for price</h4>
+                <div class="link"><a href="sproduct.html"
+                                     class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                </div>
+                <!--<button class="buy-btn">Buy Now</button>-->
             </div>
             <div class="product text-center col-lg-3 col-md-4 col-12">
               <img class="img-fluid mb-3"src="img/watches/2.jpg" alt="">
@@ -257,9 +329,13 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
               </div>
-              <h5 class="p-name">Smart Casual</h5>
-              <h4 class="p-price">₹ 1999</h4>
-              <button class="buy-btn">Buy Now</button>
+              <h5 class="p-name">Dell Vostro 3910</h5>
+                <h5 class="p-name">Intel core i3 8GB</h5>
+              <h4 class="p-price">1,730,000/=</h4>
+                <div class="link"><a href="sproduct.html"
+                                     class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                </div>
+                <!--<button class="buy-btn">Buy Now</button>-->
           </div>
           <div class="product text-center col-lg-3 col-md-4 col-12">
               <img class="img-fluid mb-3"src="img/watches/3.jpg" alt="">
@@ -270,9 +346,13 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
               </div>
-              <h5 class="p-name">Sigma</h5>
-              <h4 class="p-price">₹ 7999</h4>
-              <button class="buy-btn">Buy Now</button>
+              <h5 class="p-name">HP Pro Tower 290</h5>
+              <h5 class="p-name">G9 Intel core i3</h5>
+              <h4 class="p-price">2,250,000/=</h4>
+              <div class="link"><a href="sproduct.html"
+                                   class="theme-btn btn-style-two"><span>Shop Now</span></a>
+              </div>
+              <!--<button class="buy-btn">Buy Now</button>-->
           </div>
           <div class="product text-center col-lg-3 col-md-4 col-12">
               <img class="img-fluid mb-3"src="img/watches/4.jpg" alt="">
@@ -283,9 +363,13 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
               </div>
-              <h5 class="p-name">Gold Sport</h5>
-              <h4 class="p-price">₹ 4999</h4>
-              <button class="buy-btn">Buy Now</button>
+              <h5 class="p-name">Dell Vostro 3030</h5>
+              <h5 class="p-name">Intel core i3-14100</h5>
+              <h4 class="p-price">2,200,000/=</h4>
+              <div class="link"><a href="sproduct.html"
+                                   class="theme-btn btn-style-two"><span>Shop Now</span></a>
+              </div>
+              <!--<button class="buy-btn">Buy Now</button>-->
           </div>
         </div>
 
@@ -293,9 +377,9 @@
 
     <section id="shoes" class="my-5">
         <div class="container text-center mt-5 py-5">
-            <h3>Running Shoes</h3>
+            <h3>Smart Phones</h3>
             <hr class="mx-auto">
-            <p>Check out our latest Diwali collection.</p>
+            <p>Checkout our latest Smart Phones collection.</p>
         </div>
         <div class="row mx-auto container-fluid">
             <div class="product text-center col-lg-3 col-md-4 col-12">
@@ -307,9 +391,13 @@
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
                 </div>
-                <h5 class="p-name">Aqua Sport</h5>
-                <h4 class="p-price">₹ 4500</h4>
-                <button class="buy-btn">Buy Now</button>
+                <h5 class="p-name">Iphone 15-128GB</h5>
+                <h5 class="p-name">Dual Sim - A16 chip</h5>
+                <h4 class="p-price">3,200,000/=</h4>
+                <div class="link"><a href="sproduct.html"
+                                     class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                </div>
+                <!--<button class="buy-btn">Buy Now</button>-->
             </div>
             <div class="product text-center col-lg-3 col-md-4 col-12">
               <img class="img-fluid mb-3"src="img/shoes/2.jpg" alt="">
@@ -320,9 +408,13 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
               </div>
-              <h5 class="p-name">Smart Casual</h5>
-              <h4 class="p-price">₹ 1999</h4>
-              <button class="buy-btn">Buy Now</button>
+              <h5 class="p-name">Samsung S23</h5>
+                <h5 class="p-name">5GB-256GB Ram</h5>
+              <h4 class="p-price">2,800,000/=</h4>
+                <div class="link"><a href="sproduct.html"
+                                     class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                </div>
+                <!--<button class="buy-btn">Buy Now</button>-->
           </div>
           <div class="product text-center col-lg-3 col-md-4 col-12">
               <img class="img-fluid mb-3"src="img/shoes/3.jpg" alt="">
@@ -333,9 +425,13 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
               </div>
-              <h5 class="p-name">Sigma</h5>
-              <h4 class="p-price">₹ 7999</h4>
-              <button class="buy-btn">Buy Now</button>
+              <h5 class="p-name">Google Pixel-7 Pro</h5>
+              <h5 class="p-name">G12gb Ram/128GB</h5>
+              <h4 class="p-price">2,700,000/=</h4>
+              <div class="link"><a href="sproduct.html"
+                                   class="theme-btn btn-style-two"><span>Shop Now</span></a>
+              </div>
+              <!--<button class="buy-btn">Buy Now</button>-->
           </div>
           <div class="product text-center col-lg-3 col-md-4 col-12">
               <img class="img-fluid mb-3"src="img/shoes/4.jpg" alt="">
@@ -346,10 +442,93 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
               </div>
-              <h5 class="p-name">Gold Sport</h5>
-              <h4 class="p-price">₹ 4999</h4>
-              <button class="buy-btn">Buy Now</button>
+              <h5 class="p-name">Nokia 3.4 Dual Sim</h5>
+              <h5 class="p-name">4GB Ram - 64GB storage</h5>
+              <h4 class="p-price">630,000/=</h4>
+              <div class="link"><a href="sproduct.html"
+                                   class="theme-btn btn-style-two"><span>Shop Now</span></a>
+              </div>
+              <!--<button class="buy-btn">Buy Now</button>-->
           </div>
+        </div>
+
+    </section>
+
+    <section id="shoes" class="my-5">
+        <div class="container text-center mt-5 py-5">
+            <h3>PRINTERS</h3>
+            <hr class="mx-auto">
+            <p>Checkout our latest Printers collection.</p>
+        </div>
+        <div class="row mx-auto container-fluid">
+            <div class="product text-center col-lg-3 col-md-4 col-12">
+                <img class="img-fluid mb-3" src="img/shoes/smart%20tank.jpg" alt="">
+                <div class="star">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <h5 class="p-name">HP Smart Tank 520</h5>
+                <h5 class="p-name">All-in-one-Printer</h5>
+                <h4 class="p-price">530,000/=</h4>
+                <div class="link"><a href="sproduct.html"
+                                     class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                </div>
+                <!--<button class="buy-btn">Buy Now</button>-->
+            </div>
+            <div class="product text-center col-lg-3 col-md-4 col-12">
+                <img class="img-fluid mb-3"src="img/shoes/epson%20L3210.jpg" alt="">
+                <div class="star">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <h5 class="p-name">Epson Eco Tank</h5>
+                <h5 class="p-name">L3210 All-in-one ink</h5>
+                <h4 class="p-price">590,000/=</h4>
+                <div class="link"><a href="sproduct.html"
+                                     class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                </div>
+                <!--<button class="buy-btn">Buy Now</button>-->
+            </div>
+            <div class="product text-center col-lg-3 col-md-4 col-12">
+                <img class="img-fluid mb-3"src="img/shoes/laser%20jet%20%20M111a.jpg" alt="">
+                <div class="star">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <h5 class="p-name">HP Laser Jet M111a</h5>
+                <h5 class="p-name">Compact and Fast</h5>
+                <h4 class="p-price">440,000/=</h4>
+                <div class="link"><a href="sproduct.html"
+                                     class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                </div>
+                <!--<button class="buy-btn">Buy Now</button>-->
+            </div>
+            <div class="product text-center col-lg-3 col-md-4 col-12">
+                <img class="img-fluid mb-3"src="img/shoes/DESKjet%20printer.jpg" alt="">
+                <div class="star">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <h5 class="p-name">HP Desk Jet 2320</h5>
+                <h5 class="p-name">All-in-one Printer</h5>
+                <h4 class="p-price">180,000/=</h4>
+                <div class="link"><a href="sproduct.html"
+                                     class="theme-btn btn-style-two"><span>Shop Now</span></a>
+                </div>
+                <!--<button class="buy-btn">Buy Now</button>-->
+            </div>
         </div>
 
     </section>
@@ -357,46 +536,46 @@
     <footer class="mt-5 py-5">
         <div class="row container mx-auto pb-5">
             <div class="footer-one col-lg-3 col-md-6 col-12">
-                <h5>ShopMe</h5>
-                <p class="pt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-                    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
-                    numquam blanditiis.</p>
+                <h5>ZAGA-Technologies</h5>
+                <p class="pt-3">ZAGA-Technologies is one of Uganda’s leading independent retailers of laptops, printers
+                    and Desktops Computers. We stock hundreds of products from the big brands like lenovo, Hp, Dell and
+                    Microsoft all at the best prices.</p>
             </div>
             <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
-                <h5 class="pb-2">Featured</h5>
+                <h5 class="pb-2">Quik links</h5>
                 <ul class="text-uppercase list-unstyled">
-                    <li><a href="#">Men</a></li>
-                    <li><a href="#">Women</a></li>
-                    <li><a href="#">Boys</a></li>
-                    <li><a href="#">Girls</a></li>
-                    <li><a href="#">New Arrivals</a></li>
-                    <li><a href="#">Watches</a></li>
-                    <li><a href="#">Shoes</a></li>
+                    <li><a href="shop.html">Our store</a></li>
+                    <li><a href="cart.html">Cart</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="admin-dashboard.html">dashboard</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+
                 </ul>
             </div>
             <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
                 <h5 class="pb-2">Contact Us</h5>
                 <div>
                     <h6 class="text-uppercase">Address</h6>
-                    <p>8th d road, sardarpura jodhpur</p>
+                    <p>Kabaka kintu House Level- 1 shop No: C-03</p>
+                    <p>opp king Fahad plaza - Kampala rd.</p>
                 </div>
                 <div>
                     <h6 class="text-uppercase">Phone</h6>
-                    <p>0291-2612836</p>
+                    <p>+256 700706809</p>
                 </div>
                 <div>
                     <h6 class="text-uppercase">Email</h6>
-                    <p>ShopMe.help@gmail.com</p>
+                    <p>sales2.zagatechnologiesltd@gmail.com</p>
                 </div>
             </div>
             <div class="footer-one col-lg-3 col-md-6 col-12">
-                <h5 class="pb-2">Instagram</h5>
+                <h5 class="pb-2">Brand Partners</h5>
                 <div class="row">
-                    <img class="img-fluid w-25 h-100 m-2"src="img/insta/1.jpg" alt="">
-                    <img class="img-fluid w-25 h-100 m-2"src="img/insta/2.jpg" alt="">
-                    <img class="img-fluid w-25 h-100 m-2"src="img/insta/3.jpg" alt="">
-                    <img class="img-fluid w-25 h-100 m-2"src="img/insta/4.jpg" alt="">
-                    <img class="img-fluid w-25 h-100 m-2"src="img/insta/5.jpg" alt="">
+                    <img class="img-fluid w-25 h-100 m-2"src="img/brand/apple.png" alt="">
+                    <img class="img-fluid w-25 h-100 m-2"src="img/brand/samsung.png" alt="">
+                    <img class="img-fluid w-25 h-100 m-2"src="img/brand/hp%20logo.png" alt="">
+                    <img class="img-fluid w-25 h-100 m-2"src="img/brand/dell.png" alt="">
+                    <img class="img-fluid w-25 h-100 m-2"src="img/brand/lenovo.png" alt="">
                 </div>
             </div>
         </div>
@@ -407,12 +586,12 @@
                     <img src="img/payment.png" alt="">
                 </div>
                 <div class="col-lg-4 col-md-6 col-12 text-nowrap mb-2">
-                    <p>ShopMe © 2021. All Rights Reserved </p>
+                    <p>Zaga Technologies © 2025. All Rights Reserved </p>
                 </div>
                 <div class="col-lg-4 col-md-6 col-12">
                     <a href=""><i class="fab fa-facebook-f"></i></a>
                     <a href=""><i class="fab fa-instagram"></i></a>
-                    <a href=""><i class="fab fa-twitter"></i></a>
+                    <a href=""><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
         </div>
@@ -429,6 +608,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+<script type="module" src="./js/firebase-config.js"></script>
 
 </body>
 </html>

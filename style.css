@@ -318,3 +318,31 @@ footer .copyright a:hover {
   color: #fff;
   background-color: #fb774b;
 }
+.brand-section {
+  margin-top: 1.5cm;
+  margin-bottom: 1.5cm;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.company-tagline h3 {
+  display: orange;
+  font-size: 1.5rem;
+  color: #222;
+  font-weight: 600;
+  white-space: nowrap;
+  animation: slideIn 1.0s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

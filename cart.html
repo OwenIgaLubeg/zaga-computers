@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZAGA Technologies</title>
+
+    <!-- Bootstrap -->
+    <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"
+    />
+
+    <!-- Font Awesome -->
+    <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+    />
+    <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.15.4/css/v4-shims.css"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+        body {
+          font-family: "Poppins", sans-serif;
+          margin: 0;
+          background-color: #f9f9fb;
+        }
+
+        .cart-container {
+          max-width: 1000px;
+          margin: 40px auto;
+          background: #fff;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          overflow: hidden;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        th {
+          background: #111827;
+          color: white;
+          text-align: left;
+          padding: 15px;
+        }
+
+        td {
+          padding: 15px;
+          border-bottom: 1px solid #eee;
+        }
+
+        td img {
+          width: 70px;
+          border-radius: 6px;
+        }
+
+        .total-section {
+          padding: 25px;
+          text-align: right;
+        }
+
+        .checkout-btn {
+          background: #10b981;
+          color: white;
+          border: none;
+          padding: 12px 25px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 16px;
+        }
+
+        .checkout-btn:hover {
+          background: #059669;
+        }
+
+        .empty-cart {
+          text-align: center;
+          padding: 60px 20px;
+          color: #666;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Navbar -->
+<!-- ✅ Keep your existing navbar here -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white py-3 fixed-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+            <img
+                    src="./img/zaga-logo.jpg"
+                    alt="ZAGA Technologies Logo"
+                    style="height: 40px; width: auto; margin-right: 8px"
+            />
+        </a>
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+        >
+            <span><i id="bar" class="fas fa-bars"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="shop.html">Our Store</a></li>
+                <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin-dashboard.html">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.html">Sign-In/Up</a></li>
+                <li class="nav-item d-flex align-items-center">
+                    <a href="cart.html" class="cart-link ms-2" title="View Cart">
+                        <i class="fas fa-shopping-bag"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<h1 class="text-center mt-5 pt-5">Your Shopping Cart</h1>
+
+<div class="cart-container">
+    <table id="cartTable">
+        <thead>
+        <tr>
+            <th>Product</th>
+            <th>Name</th>
+            <th>Price (UGX)</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Remove</th>
+        </tr>
+        </thead>
+        <tbody id="cartItems"></tbody>
+    </table>
+
+    <div class="total-section">
+        <h3>Grand Total: UGX <span id="grandTotal">0</span></h3>
+        <button class="checkout-btn" id="checkoutBtn">Checkout</button>
+    </div>
+</div>
+
+<div class="empty-cart" id="emptyCartMessage" style="display:none;">
+    <i class="fas fa-shopping-cart fa-3x"></i>
+    <h3>Your cart is empty.</h3>
+    <p>Go back to the <a href="shop.html">Store</a> to add items.</p>
+</div>
+
+
+<footer class="mt-5 py-5">
+    <div class="row container mx-auto pb-5">
+        <div class="footer-one col-lg-3 col-md-6 col-12">
+            <h5>ZAGA-Technologies</h5>
+            <p class="pt-3">ZAGA-Technologies is one of Uganda’s leading independent retailers of laptops, printers
+                and Desktops Computers. We stock hundreds of products from the big brands like lenovo, Hp, Dell and
+                Microsoft all at the best prices.</p>
+        </div>
+        <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
+            <h5 class="pb-2">Quik links</h5>
+            <ul class="text-uppercase list-unstyled">
+                <li><a href="shop.html">Our store</a></li>
+                <li><a href="cart.html">Cart</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="admin-dashboard.html">dashboard</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+
+            </ul>
+        </div>
+        <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
+            <h5 class="pb-2">Contact Us</h5>
+            <div>
+                <h6 class="text-uppercase">Address</h6>
+                <p>Kabaka kintu House Level- 1 shop No: C-03</p>
+                <p>opp king Fahad plaza - Kampala rd.</p>
+            </div>
+            <div>
+                <h6 class="text-uppercase">Phone</h6>
+                <p>+256 700706809</p>
+            </div>
+            <div>
+                <h6 class="text-uppercase">Email</h6>
+                <p>sales2.zagatechnologiesltd@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-one col-lg-3 col-md-6 col-12">
+            <h5 class="pb-2">Brand Partners</h5>
+            <div class="row">
+                <img class="img-fluid w-25 h-100 m-2"src="img/brand/apple.png" alt="">
+                <img class="img-fluid w-25 h-100 m-2"src="img/brand/samsung.png" alt="">
+                <img class="img-fluid w-25 h-100 m-2"src="img/brand/hp%20logo.png" alt="">
+                <img class="img-fluid w-25 h-100 m-2"src="img/brand/dell.png" alt="">
+                <img class="img-fluid w-25 h-100 m-2"src="img/brand/lenovo.png" alt="">
+            </div>
+        </div>
+    </div>
+
+    <div class="copyright mt-5">
+        <div class="row container mx-auto">
+            <div class="col-lg-3 col-md-6 col-12 mb-4">
+                <img src="img/payment.png" alt="">
+            </div>
+            <div class="col-lg-4 col-md-6 col-12 text-nowrap mb-2">
+                <p>Zaga Technologies © 2025. All Rights Reserved </p>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12">
+                <a href=""><i class="fab fa-facebook-f"></i></a>
+                <a href=""><i class="fab fa-instagram"></i></a>
+                <a href=""><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Firebase Integration -->
+<script type="module">
+    import { db } from "./js/firebase-config.js";
+    import {
+      collection,
+      getDocs,
+      updateDoc,
+      deleteDoc,
+      doc,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const cartCollection = collection(db, "cart");
+    const cartItemsContainer = document.getElementById("cartItems");
+    const grandTotal = document.getElementById("grandTotal");
+    const emptyCartMsg = document.getElementById("emptyCartMessage");
+    const cartTable = document.getElementById("cartTable");
+    const checkoutBtn = document.getElementById("checkoutBtn");
+
+    // Listen for live updates from Firestore
+    onSnapshot(cartCollection, (snapshot) => {
+      const cart = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      renderCart(cart);
+    });
+
+    function renderCart(cart) {
+      if (cart.length === 0) {
+        cartTable.style.display = "none";
+        emptyCartMsg.style.display = "block";
+        return;
+      }
+
+      cartTable.style.display = "table";
+      emptyCartMsg.style.display = "none";
+      cartItemsContainer.innerHTML = "";
+      let total = 0;
+
+      cart.forEach((item) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+
+        cartItemsContainer.innerHTML += `
+          <tr>
+            <td><img src="${item.image}" alt="${item.name}"></td>
+            <td>${item.name}</td>
+            <td>${item.price.toLocaleString()}</td>
+            <td>
+              <input type="number" value="${item.quantity}" min="1" style="width:60px"
+                onchange="updateQuantity('${item.id}', this.value)">
+            </td>
+            <td>${itemTotal.toLocaleString()}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="removeItem('${item.id}')">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>`;
+      });
+      grandTotal.textContent = total.toLocaleString();
+    }
+
+    // Expose helper functions to global scope
+    window.updateQuantity = async (id, quantity) => {
+      const itemRef = doc(db, "cart", id);
+      await updateDoc(itemRef, { quantity: parseInt(quantity) });
+    };
+
+    window.removeItem = async (id) => {
+      await deleteDoc(doc(db, "cart", id));
+    };
+
+    checkoutBtn.addEventListener("click", async () => {
+      const snapshot = await getDocs(cartCollection);
+      const deletePromises = snapshot.docs.map((d) => deleteDoc(doc(db, "cart", d.id)));
+      await Promise.all(deletePromises);
+      alert("Checkout successful! Thank you for your purchase.");
+    });
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+<script src="sprod.js"></script>
+<script type="module" src="./js/firebase-config.js"></script>
+</body>
+</html>
