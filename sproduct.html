@@ -270,7 +270,7 @@
 <script type="module">
     import { auth, db } from './js/firebase-config.js';
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { doc, getDoc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { doc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
     const params = new URLSearchParams(window.location.search);
     const productId = params.get('id') || localStorage.getItem("selectedProductId");
@@ -281,6 +281,12 @@
     
     let currentUser = null;
     let currentProduct = null;
+    let unsubscribeProduct = null;
+    const parsePrice = (value) => Number(String(value ?? '').replace(/[^0-9.]/g, '')) || 0;
+    const formatPrice = (value) => {
+      const numeric = parsePrice(value);
+      return numeric > 0 ? `UGX ${numeric.toLocaleString()}` : 'UGX 0';
+    };
 
     // Handle authentication state
     onAuthStateChanged(auth, (user) => {
@@ -312,35 +318,30 @@
     }
 
     // Load product details
-    async function loadProduct() {
+    function subscribeToProduct() {
       if (!productId) {
         document.getElementById('productName').textContent = "No product selected";
         return;
       }
 
-      try {
-        const docRef = doc(db, "products", productId);
-        const docSnap = await getDoc(docRef);
+      if (unsubscribeProduct) {
+        unsubscribeProduct();
+      }
 
+      const docRef = doc(db, "products", productId);
+      unsubscribeProduct = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
           currentProduct = { id: productId, ...data };
-          
+
           document.getElementById('productName').textContent = data.name;
           document.getElementById('productBrand').textContent = `Brand: ${data.brand || 'N/A'}`;
-
-          const rawPrice = data.price ?? 0;
-          const priceNumber = (typeof rawPrice === 'number')
-            ? rawPrice
-            : Number(String(rawPrice).replace(/[^0-9.-]+/g,"")) || 0;
-          document.getElementById('productPrice').textContent = "UGX " + priceNumber.toLocaleString();
-
+          document.getElementById('productPrice').textContent = formatPrice(data.price);
           document.getElementById('productDescription').textContent = data.description || 'No description available';
-          
+
           const imageUrl = data.imageUrl || data.imageURL || data.image || 'img/shop/default.jpg';
           document.getElementById('mainImage').src = imageUrl;
 
-          // Render small images if available
           const smallImagesContainer = document.getElementById('smallImages');
           smallImagesContainer.innerHTML = '';
           if (Array.isArray(data.smallImages) && data.smallImages.length) {
@@ -352,15 +353,15 @@
               smallImagesContainer.appendChild(imgEl);
             });
           }
-
         } else {
           document.getElementById('productName').textContent = "Product Not Found";
+          currentProduct = null;
         }
-
-      } catch (error) {
+      }, (error) => {
         console.error("Error loading product:", error);
         document.getElementById('productName').textContent = "Error loading product details.";
-      }
+        currentProduct = null;
+      });
     }
 
     // Add to Cart function
@@ -377,10 +378,7 @@
       }
 
       try {
-        const rawPrice = currentProduct.price ?? 0;
-        const priceNumber = (typeof rawPrice === 'number')
-          ? rawPrice
-          : Number(String(rawPrice).replace(/[^0-9.-]+/g,"")) || 0;
+        const priceNumber = parsePrice(currentProduct.price);
 
         const imageUrl = currentProduct.imageUrl || currentProduct.imageURL || currentProduct.image || 'img/shop/default.jpg';
 
@@ -416,7 +414,7 @@
       window.location.href = 'shop.html';
     });
 
-    loadProduct();
+    subscribeToProduct();
 </script>
 
 

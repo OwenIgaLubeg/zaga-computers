@@ -175,7 +175,7 @@
 <script type="module">
     import { auth, db, storage } from "./js/firebase-config.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { collection, addDoc, deleteDoc, doc, updateDoc, getDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
     import { ref, uploadBytes, getDownloadURL, deleteObject, refFromURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
     const ADMIN_EMAIL = 'sales2.zagatechnologiesltd@gmail.com';
@@ -196,36 +196,70 @@
     const cancelEditBtn = document.getElementById('cancelEditBtn');
     const editProductId = document.getElementById('editProductId');
     let dataTable;
+    let unsubscribeProducts = null;
+
+    const sanitizePrice = (value) => {
+      const numeric = Number(String(value).replace(/[^0-9.]/g, ''));
+      return Number.isFinite(numeric) ? numeric : 0;
+    };
+
+    const formatPrice = (value) => {
+      const numericValue = typeof value === 'number' ? value : sanitizePrice(value);
+      if (numericValue <= 0) return 'UGX 0';
+      return `UGX ${numericValue.toLocaleString()}`;
+    };
 
     // ✅ Load Products (READ)
-    async function loadProducts() {
+    const startProductListener = () => {
+      if (unsubscribeProducts) {
+        unsubscribeProducts();
+      }
+
       productTableBody.innerHTML = '';
       loadingText.textContent = 'Loading...';
-      const querySnapshot = await getDocs(collection(db, "products"));
-      loadingText.textContent = '';
 
-      querySnapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const row = `
-          <tr>
-            <td><img src="${data.imageUrl}" width="60" class="rounded"></td>
-            <td>${data.name}</td>
-            <td>${data.brand}</td>
-            <td>${data.price}</td>
-            <td>
-              <button class="btn btn-warning btn-sm me-2" onclick="editProduct('${docSnap.id}')">Edit</button>
-              <button class="btn btn-danger btn-sm" onclick="deleteProduct('${docSnap.id}', '${data.imageUrl}')">Delete</button>
-            </td>
-          </tr>`;
-        productTableBody.innerHTML += row;
+      const productsQuery = query(collection(db, "products"), orderBy("createdAt", "desc"));
+      unsubscribeProducts = onSnapshot(productsQuery, (snapshot) => {
+        if (dataTable) {
+          dataTable.destroy();
+          dataTable = null;
+        }
+
+        productTableBody.innerHTML = '';
+
+        if (snapshot.empty) {
+          loadingText.textContent = 'No products found yet.';
+        } else {
+          loadingText.textContent = '';
+        }
+
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const imageUrl = data.imageUrl || data.imageURL || 'img/default-product.jpg';
+          const formattedPrice = formatPrice(data.price);
+
+          const row = `
+            <tr>
+              <td><img src="${imageUrl}" width="60" class="rounded border" alt="${data.name || 'Product'}"></td>
+              <td>${data.name || '-'}</td>
+              <td>${data.brand || '-'}</td>
+              <td>${formattedPrice}</td>
+              <td>
+                <button class="btn btn-warning btn-sm me-2" onclick="editProduct('${docSnap.id}')">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteProduct('${docSnap.id}', '${imageUrl}')">Delete</button>
+              </td>
+            </tr>`;
+          productTableBody.innerHTML += row;
+        });
+
+        dataTable = $('#productTable').DataTable();
+      }, (error) => {
+        console.error('Error loading products:', error);
+        loadingText.textContent = 'Failed to load products. Please try again.';
       });
+    };
 
-      // Initialize DataTable after loading
-      if (dataTable) dataTable.destroy();
-      dataTable = $('#productTable').DataTable();
-    }
-
-    loadProducts();
+    startProductListener();
 
     // ✅ Add or Update Product
     addProductForm.addEventListener('submit', async (e) => {
@@ -233,9 +267,20 @@
       const id = editProductId.value;
       const name = document.getElementById('productName').value.trim();
       const brand = document.getElementById('productBrand').value.trim();
-      const price = document.getElementById('productPrice').value.trim();
+      const rawPrice = document.getElementById('productPrice').value.trim();
       const description = document.getElementById('productDesc').value.trim();
       const imageFile = document.getElementById('productImage').files[0];
+      const price = sanitizePrice(rawPrice);
+
+      if (!name || !brand || !description) {
+        alert('Please fill in all product details.');
+        return;
+      }
+
+      if (price <= 0) {
+        alert('Please enter a valid price (greater than 0).');
+        return;
+      }
 
       try {
         if (!id) {
@@ -265,7 +310,6 @@
 
         addProductForm.reset();
         editProductId.value = "";
-        loadProducts();
       } catch (error) {
         console.error(error);
         alert('❌ Error saving product: ' + error.message);
@@ -280,7 +324,7 @@
         const data = docSnap.data();
         document.getElementById('productName').value = data.name;
         document.getElementById('productBrand').value = data.brand;
-        document.getElementById('productPrice').value = data.price;
+        document.getElementById('productPrice').value = sanitizePrice(data.price);
         document.getElementById('productDesc').value = data.description;
         editProductId.value = id;
 
@@ -310,7 +354,6 @@
         console.warn('Image deletion skipped:', err.message);
       }
       alert('🗑️ Product deleted');
-      loadProducts();
     };
 
     // ✅ Logout functionality

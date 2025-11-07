@@ -246,6 +246,11 @@
 
     let currentUser = null;
     let cartItems = [];
+    const parsePrice = (value) => Number(String(value ?? '').replace(/[^0-9.]/g, '')) || 0;
+    const formatPrice = (value) => {
+      const numeric = parsePrice(value);
+      return numeric > 0 ? numeric.toLocaleString() : '0';
+    };
 
     // Handle authentication state
     onAuthStateChanged(auth, (user) => {
@@ -287,7 +292,7 @@
       let total = 0;
 
       cart.forEach((item) => {
-        const price = parseFloat(item.price) || 0;
+        const price = parsePrice(item.price);
         const quantity = parseInt(item.quantity) || 1;
         const itemTotal = price * quantity;
         total += itemTotal;
@@ -296,12 +301,12 @@
           <tr>
             <td><img src="${item.image || item.imageUrl || 'img/default-product.jpg'}" alt="${item.name}"></td>
             <td>${item.name}</td>
-            <td>${price.toLocaleString()}</td>
+            <td>${formatPrice(price)}</td>
             <td>
               <input type="number" value="${quantity}" min="1" style="width:60px"
                 onchange="updateQuantity('${item.id}', this.value)">
             </td>
-            <td>${itemTotal.toLocaleString()}</td>
+            <td>${formatPrice(itemTotal)}</td>
             <td>
               <button class="btn btn-danger btn-sm" onclick="removeItem('${item.id}')">
                 <i class="fa fa-trash"></i>
@@ -309,7 +314,7 @@
             </td>
           </tr>`;
       });
-      grandTotal.textContent = total.toLocaleString();
+      grandTotal.textContent = formatPrice(total);
     }
 
     // Update quantity
@@ -362,7 +367,7 @@
       // Calculate total
       let total = 0;
       cartItems.forEach(item => {
-        const price = parseFloat(item.price) || 0;
+        const price = parsePrice(item.price);
         const quantity = parseInt(item.quantity) || 1;
         total += price * quantity;
       });
@@ -407,7 +412,7 @@
           userEmail: currentUser.email,
           items: cartItems,
           totalAmount: cartItems.reduce((sum, item) => {
-            return sum + (parseFloat(item.price) || 0) * (parseInt(item.quantity) || 1);
+            return sum + parsePrice(item.price) * (parseInt(item.quantity) || 1);
           }, 0),
           paymentStatus: 'completed',
           paymentReference: paymentData.tx_ref,
