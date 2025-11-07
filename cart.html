@@ -118,12 +118,8 @@
                 <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
                 <li class="nav-item"><a class="nav-link" href="admin-dashboard.html">Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="login.html">Sign-In/Up</a></li>
-                <li class="nav-item d-flex align-items-center">
-                    <a href="cart.html" class="cart-link ms-2" title="View Cart">
-                        <i class="fas fa-shopping-bag"></i>
-                    </a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="cart.html" title="View Cart"><i class="fas fa-shopping-bag"></i></a></li>
+                <li class="nav-item"><a class="nav-link" href="#" id="authBtn">Sign-In/Up</a></li>
             </ul>
         </div>
     </div>
@@ -223,30 +219,60 @@
     </div>
 </footer>
 
-<!-- Firebase Integration -->
+<!-- Flutterwave Payment Script -->
+<script src="https://checkout.flutterwave.com/v3.js"></script>
+
+<!-- Firebase Integration with User-Specific Cart & Payment -->
 <script type="module">
-    import { db } from "./js/firebase-config.js";
+    import { auth, db } from "./js/firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
     import {
       collection,
       getDocs,
       updateDoc,
       deleteDoc,
       doc,
-      onSnapshot
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      onSnapshot,
+      addDoc,
+      query
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    const cartCollection = collection(db, "cart");
     const cartItemsContainer = document.getElementById("cartItems");
     const grandTotal = document.getElementById("grandTotal");
     const emptyCartMsg = document.getElementById("emptyCartMessage");
     const cartTable = document.getElementById("cartTable");
     const checkoutBtn = document.getElementById("checkoutBtn");
+    const authBtn = document.getElementById("authBtn");
 
-    // Listen for live updates from Firestore
-    onSnapshot(cartCollection, (snapshot) => {
-      const cart = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      renderCart(cart);
+    let currentUser = null;
+    let cartItems = [];
+
+    // Handle authentication state
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      if (user) {
+        authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+        authBtn.onclick = logout;
+        loadUserCart(user.uid);
+      } else {
+        authBtn.innerHTML = 'Sign-In/Up';
+        authBtn.href = 'login.html';
+        authBtn.onclick = null;
+        // Show empty cart for non-logged-in users
+        cartTable.style.display = "none";
+        emptyCartMsg.style.display = "block";
+      }
     });
+
+    // Load user-specific cart
+    function loadUserCart(userId) {
+      const userCartRef = collection(db, `users/${userId}/cart`);
+      
+      onSnapshot(userCartRef, (snapshot) => {
+        cartItems = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        renderCart(cartItems);
+      });
+    }
 
     function renderCart(cart) {
       if (cart.length === 0) {
@@ -261,16 +287,18 @@
       let total = 0;
 
       cart.forEach((item) => {
-        const itemTotal = item.price * item.quantity;
+        const price = parseFloat(item.price) || 0;
+        const quantity = parseInt(item.quantity) || 1;
+        const itemTotal = price * quantity;
         total += itemTotal;
 
         cartItemsContainer.innerHTML += `
           <tr>
-            <td><img src="${item.image}" alt="${item.name}"></td>
+            <td><img src="${item.image || item.imageUrl || 'img/default-product.jpg'}" alt="${item.name}"></td>
             <td>${item.name}</td>
-            <td>${item.price.toLocaleString()}</td>
+            <td>${price.toLocaleString()}</td>
             <td>
-              <input type="number" value="${item.quantity}" min="1" style="width:60px"
+              <input type="number" value="${quantity}" min="1" style="width:60px"
                 onchange="updateQuantity('${item.id}', this.value)">
             </td>
             <td>${itemTotal.toLocaleString()}</td>
@@ -284,22 +312,126 @@
       grandTotal.textContent = total.toLocaleString();
     }
 
-    // Expose helper functions to global scope
+    // Update quantity
     window.updateQuantity = async (id, quantity) => {
-      const itemRef = doc(db, "cart", id);
+      if (!currentUser) {
+        alert('Please login to update cart');
+        return;
+      }
+      const itemRef = doc(db, `users/${currentUser.uid}/cart`, id);
       await updateDoc(itemRef, { quantity: parseInt(quantity) });
     };
 
+    // Remove item
     window.removeItem = async (id) => {
-      await deleteDoc(doc(db, "cart", id));
+      if (!currentUser) {
+        alert('Please login to remove items');
+        return;
+      }
+      await deleteDoc(doc(db, `users/${currentUser.uid}/cart`, id));
     };
 
+    // Logout function
+    async function logout(e) {
+      e.preventDefault();
+      try {
+        await signOut(auth);
+        localStorage.removeItem('userLoggedIn');
+        localStorage.removeItem('adminLoggedIn');
+        localStorage.removeItem('userRole');
+        window.location.href = 'index.html';
+      } catch (error) {
+        console.error('Logout error:', error);
+        alert('Error logging out');
+      }
+    }
+
+    // Checkout with Flutterwave Payment
     checkoutBtn.addEventListener("click", async () => {
-      const snapshot = await getDocs(cartCollection);
-      const deletePromises = snapshot.docs.map((d) => deleteDoc(doc(db, "cart", d.id)));
-      await Promise.all(deletePromises);
-      alert("Checkout successful! Thank you for your purchase.");
+      if (!currentUser) {
+        alert('Please login to checkout');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      if (cartItems.length === 0) {
+        alert('Your cart is empty!');
+        return;
+      }
+
+      // Calculate total
+      let total = 0;
+      cartItems.forEach(item => {
+        const price = parseFloat(item.price) || 0;
+        const quantity = parseInt(item.quantity) || 1;
+        total += price * quantity;
+      });
+
+      // Get user email
+      const userEmail = currentUser.email;
+      const userName = currentUser.displayName || 'Customer';
+
+      // Flutterwave payment configuration
+      FlutterwaveCheckout({
+        public_key: "FLWPUBK_TEST-SANDBOXDEMOKEY-X", // ⚠️ REPLACE WITH YOUR FLUTTERWAVE PUBLIC KEY
+        tx_ref: "txref-" + Date.now(),
+        amount: total,
+        currency: "UGX",
+        payment_options: "card, mobilemoneyuganda, ussd",
+        customer: {
+          email: userEmail,
+          phone_number: "",
+          name: userName,
+        },
+        customizations: {
+          title: "ZAGA Technologies",
+          description: "Payment for products",
+          logo: "https://your-logo-url.com/logo.png", // Add your logo URL
+        },
+        callback: function (data) {
+          console.log("Payment successful:", data);
+          processOrder(data);
+        },
+        onclose: function() {
+          console.log("Payment cancelled");
+        }
+      });
     });
+
+    // Process successful order
+    async function processOrder(paymentData) {
+      try {
+        // Create order in Firestore
+        const orderData = {
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          items: cartItems,
+          totalAmount: cartItems.reduce((sum, item) => {
+            return sum + (parseFloat(item.price) || 0) * (parseInt(item.quantity) || 1);
+          }, 0),
+          paymentStatus: 'completed',
+          paymentReference: paymentData.tx_ref,
+          paymentMethod: paymentData.payment_type || 'card',
+          createdAt: new Date(),
+          status: 'pending'
+        };
+
+        await addDoc(collection(db, 'orders'), orderData);
+
+        // Clear cart
+        const userCartRef = collection(db, `users/${currentUser.uid}/cart`);
+        const snapshot = await getDocs(userCartRef);
+        const deletePromises = snapshot.docs.map((d) => deleteDoc(doc(db, `users/${currentUser.uid}/cart`, d.id)));
+        await Promise.all(deletePromises);
+
+        alert("✅ Payment successful! Your order has been placed. Order ID: " + paymentData.tx_ref);
+        window.location.href = 'shop.html';
+        
+      } catch (error) {
+        console.error('Order processing error:', error);
+        alert('Payment received but there was an error processing your order. Please contact support.');
+      }
+    }
 </script>
 
 <!-- Bootstrap JS -->

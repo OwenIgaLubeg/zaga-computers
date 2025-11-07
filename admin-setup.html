@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Setup - ZAGA Technologies</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .setup-container {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+        .setup-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .setup-header h2 {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .setup-header p {
+            color: #666;
+        }
+        .setup-info {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .setup-info h5 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .credential-box {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+        }
+        .credential-label {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .credential-value {
+            color: #333;
+            font-family: monospace;
+            font-size: 1.1rem;
+            word-break: break-all;
+        }
+        .btn-setup {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 15px;
+            width: 100%;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+        .btn-setup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        .btn-setup:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .status-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        .status-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .status-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .status-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .spinner-border {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+
+<div class="setup-container">
+    <div class="setup-header">
+        <i class="fas fa-user-shield fa-3x" style="color: #667eea; margin-bottom: 20px;"></i>
+        <h2>Admin Account Setup</h2>
+        <p>Create the admin account for ZAGA Technologies</p>
+    </div>
+
+    <div class="setup-info">
+        <h5><i class="fas fa-info-circle"></i> Admin Credentials</h5>
+        <div class="credential-box">
+            <div class="credential-label">Email:</div>
+            <div class="credential-value">sales2.zagatechnologiesltd@gmail.com</div>
+        </div>
+        <div class="credential-box">
+            <div class="credential-label">Password:</div>
+            <div class="credential-value">@karenlivs2</div>
+        </div>
+    </div>
+
+    <button id="createAdminBtn" class="btn btn-setup">
+        <i class="fas fa-rocket"></i> Create Admin Account
+    </button>
+
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <p class="mt-2">Creating admin account...</p>
+    </div>
+
+    <div id="statusMessage" class="status-message"></div>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <small class="text-muted">
+            <i class="fas fa-lock"></i> This page should only be accessed once during initial setup
+        </small>
+    </div>
+</div>
+
+<script type="module">
+    import { auth, db } from "./js/firebase-config.js";
+    import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    const ADMIN_EMAIL = 'sales2.zagatechnologiesltd@gmail.com';
+    const ADMIN_PASSWORD = '@karenlivs2';
+
+    const createAdminBtn = document.getElementById('createAdminBtn');
+    const statusMessage = document.getElementById('statusMessage');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+
+    createAdminBtn.addEventListener('click', async () => {
+        // Disable button and show loading
+        createAdminBtn.disabled = true;
+        loadingSpinner.style.display = 'block';
+        statusMessage.style.display = 'none';
+
+        try {
+            // Create admin user in Firebase Authentication
+            const userCredential = await createUserWithEmailAndPassword(auth, ADMIN_EMAIL, ADMIN_PASSWORD);
+            const user = userCredential.user;
+
+            // Create admin profile in Firestore
+            await setDoc(doc(db, 'users', user.uid), {
+                name: 'Admin',
+                email: ADMIN_EMAIL,
+                role: 'admin',
+                createdAt: new Date(),
+                isAdmin: true
+            });
+
+            // Show success message
+            loadingSpinner.style.display = 'none';
+            statusMessage.className = 'status-message status-success';
+            statusMessage.innerHTML = `
+                <h5><i class="fas fa-check-circle"></i> Success!</h5>
+                <p>Admin account created successfully!</p>
+                <p><strong>You can now:</strong></p>
+                <ul>
+                    <li>Go to the <a href="login.html">Login Page</a></li>
+                    <li>Use the Admin Login (left side)</li>
+                    <li>Access the Dashboard to add products</li>
+                </ul>
+                <a href="login.html" class="btn btn-primary mt-3">
+                    <i class="fas fa-sign-in-alt"></i> Go to Login
+                </a>
+            `;
+            statusMessage.style.display = 'block';
+
+            // Change button
+            createAdminBtn.innerHTML = '<i class="fas fa-check"></i> Account Created';
+            createAdminBtn.style.background = '#28a745';
+
+        } catch (error) {
+            loadingSpinner.style.display = 'none';
+            createAdminBtn.disabled = false;
+
+            // Handle different error types
+            if (error.code === 'auth/email-already-in-use') {
+                statusMessage.className = 'status-message status-info';
+                statusMessage.innerHTML = `
+                    <h5><i class="fas fa-info-circle"></i> Account Already Exists</h5>
+                    <p>The admin account has already been created!</p>
+                    <p>You can proceed to login:</p>
+                    <a href="login.html" class="btn btn-primary mt-3">
+                        <i class="fas fa-sign-in-alt"></i> Go to Login
+                    </a>
+                `;
+            } else if (error.code === 'auth/network-request-failed') {
+                statusMessage.className = 'status-message status-error';
+                statusMessage.innerHTML = `
+                    <h5><i class="fas fa-exclamation-triangle"></i> Network Error</h5>
+                    <p>Please check your internet connection and try again.</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                `;
+            } else {
+                statusMessage.className = 'status-message status-error';
+                statusMessage.innerHTML = `
+                    <h5><i class="fas fa-times-circle"></i> Error</h5>
+                    <p>Failed to create admin account.</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p><strong>Code:</strong> ${error.code}</p>
+                    <hr>
+                    <small>If this persists, you may need to create the account manually in Firebase Console.</small>
+                `;
+            }
+            statusMessage.style.display = 'block';
+        }
+    });
+
+    // Check if admin already exists on page load
+    window.addEventListener('load', () => {
+        statusMessage.className = 'status-message status-info';
+        statusMessage.innerHTML = `
+            <h5><i class="fas fa-lightbulb"></i> First Time Setup</h5>
+            <p>Click the button above to create the admin account. This only needs to be done once.</p>
+            <p><strong>Note:</strong> If the account already exists, you'll be notified and can proceed to login.</p>
+        `;
+        statusMessage.style.display = 'block';
+    });
+</script>
+
+</body>
+</html>
+

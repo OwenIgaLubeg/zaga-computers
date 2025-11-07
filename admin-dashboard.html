@@ -46,10 +46,8 @@
                 <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
                 <li class="nav-item"><a class="nav-link active" href="admin-dashboard.html">Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="login.html">Sign-In/Up</a></li>
-                <li class="nav-item d-flex align-items-center">
-                    <a href="cart.html" class="cart-link ms-2" title="View Cart"><i class="fas fa-shopping-bag"></i></a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="cart.html" title="View Cart"><i class="fas fa-shopping-bag"></i></a></li>
+                <li class="nav-item"><a class="nav-link" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </div>
     </div>
@@ -175,29 +173,20 @@
 
 <!-- ✅ Firebase Integration -->
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, refFromURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+    import { auth, db, storage } from "./js/firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { ref, uploadBytes, getDownloadURL, deleteObject, refFromURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDTKJ5WuSPBbIwVXKjsL2h_4K360qIJzb8",
-      authDomain: "zaga-tech-store.firebaseapp.com",
-      projectId: "zaga-tech-store",
-      storageBucket: "zaga-tech-store.firebasestorage.app",
-      messagingSenderId: "402026502827",
-      appId: "1:402026502827:web:664170cc19966073f435ee",
-      measurementId: "G-NN99SC43XX"
-    };
+    const ADMIN_EMAIL = 'sales2.zagatechnologiesltd@gmail.com';
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-
-    // Admin check
-    if (!localStorage.getItem('adminLoggedIn')) {
-      alert('Access Denied! Please log in as Admin.');
-      window.location.href = 'login.html';
-    }
+    // Proper admin authentication check
+    onAuthStateChanged(auth, (user) => {
+      if (!user || user.email !== ADMIN_EMAIL) {
+        alert('Access Denied! Admin login required.');
+        window.location.href = 'login.html';
+      }
+    });
 
     const addProductForm = document.getElementById('addProductForm');
     const productTableBody = document.getElementById('productTableBody');
@@ -323,6 +312,21 @@
       alert('🗑️ Product deleted');
       loadProducts();
     };
+
+    // ✅ Logout functionality
+    import { signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        await signOut(auth);
+        localStorage.removeItem('adminLoggedIn');
+        localStorage.removeItem('userRole');
+        window.location.href = 'login.html';
+      } catch (error) {
+        console.error('Logout error:', error);
+        alert('Error logging out. Please try again.');
+      }
+    });
 </script>
 
 <!-- ✅ Libraries -->
