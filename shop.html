@@ -68,6 +68,10 @@
                 </li>
 
                 <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="blog.html">Blogs</a>
+                </li>
+
+                <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="admin-dashboard.html">Dashboard</a>
                 </li>
 
@@ -118,25 +122,69 @@
 
 <!-- Firebase Integration & Product Fetch -->
 <script type="module">
-  import { auth, db } from "./js/firebase-config.js";
+  import { auth } from "./js/firebase-config.js";
   import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import {
+    subscribeToProducts,
+    mapProductDoc,
+    formatPrice
+  } from "./js/services/products-service.js";
 
   const productList = document.getElementById("productList");
   const authBtn = document.getElementById("authBtn");
-  let currentUser = null;
-  const parsePrice = (value) => Number(String(value ?? '').replace(/[^0-9.]/g, '')) || 0;
-  const formatPrice = (value) => {
-    const numeric = parsePrice(value);
-    return numeric > 0 ? `UGX ${numeric.toLocaleString()}` : 'UGX 0';
+  const DEFAULT_IMAGE = 'img/shop/default.jpg';
+  let unsubscribeProducts = null;
+
+  const renderProducts = (products) => {
+    if (!products.length) {
+      productList.innerHTML = `<p class="text-center text-muted w-100">No products available yet.</p>`;
+      return;
+    }
+
+    productList.innerHTML = products.map(product => {
+      const imageUrl = product.imageUrl || DEFAULT_IMAGE;
+      return `
+        <div class="product text-center col-lg-3 col-md-4 col-12">
+          <div class="product-card shadow-sm p-3 bg-white rounded" data-product-id="${product.id}">
+            <img class="img-fluid mb-3 rounded" src="${imageUrl}" alt="${product.name}">
+            <div class="star text-warning mb-2">
+              ${'<i class="fas fa-star"></i>'.repeat(5)}
+            </div>
+            <h5 class="p-name">${product.name}</h5>
+            <h4 class="p-price">${formatPrice(product.price)}</h4>
+            <button class="btn btn-primary mt-2" data-product-id="${product.id}">View Product</button>
+          </div>
+        </div>
+      `;
+    }).join("");
   };
 
-  // Handle authentication state
+  productList.addEventListener('click', (event) => {
+    const productCard = event.target.closest('[data-product-id]');
+    if (!productCard) return;
+    const productId = productCard.getAttribute('data-product-id');
+    if (!productId) return;
+    localStorage.setItem("selectedProductId", productId);
+    window.location.href = `sproduct.html?id=${productId}`;
+  });
+
   onAuthStateChanged(auth, (user) => {
-    currentUser = user;
     if (user) {
       authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
-      authBtn.onclick = logout;
+      authBtn.onclick = async (e) => {
+        e.preventDefault();
+        try {
+          await signOut(auth);
+          localStorage.removeItem('userLoggedIn');
+          localStorage.removeItem('adminLoggedIn');
+          localStorage.removeItem('userRole');
+          alert('Logged out successfully');
+          window.location.reload();
+        } catch (error) {
+          console.error('Logout error:', error);
+          alert('Error logging out');
+        }
+      };
     } else {
       authBtn.innerHTML = 'Sign-In/Up';
       authBtn.href = 'login.html';
@@ -144,64 +192,18 @@
     }
   });
 
-  // Logout function
-  async function logout(e) {
-    e.preventDefault();
-    try {
-      await signOut(auth);
-      localStorage.removeItem('userLoggedIn');
-      localStorage.removeItem('adminLoggedIn');
-      localStorage.removeItem('userRole');
-      alert('Logged out successfully');
-      window.location.reload();
-    } catch (error) {
-      console.error('Logout error:', error);
-      alert('Error logging out');
+  unsubscribeProducts = subscribeToProducts((snapshot) => {
+    const products = snapshot.docs.map(mapProductDoc);
+    renderProducts(products);
+  }, (error) => {
+    console.error('Error loading products:', error);
+    productList.innerHTML = `<p class="text-center text-danger w-100">Failed to load products. Please refresh.</p>`;
+  });
+
+  window.addEventListener('beforeunload', () => {
+    if (unsubscribeProducts) {
+      unsubscribeProducts();
     }
-  }
-
-  // Render Products
-  function displayProducts(products) {
-    productList.innerHTML = "";
-    if (products.length === 0) {
-      productList.innerHTML = `<p class="text-center text-muted w-100">No products available yet.</p>`;
-      return;
-    }
-
-    products.forEach(p => {
-      const card = document.createElement("div");
-      card.className = "product text-center col-lg-3 col-md-4 col-12";
-      const imageUrl = p.imageUrl || p.imageURL || 'img/default-product.jpg';
-      
-      card.innerHTML = `
-        <div class="product-card shadow-sm p-3 bg-white rounded" onclick="viewProduct('${p.id}')">
-          <img class="img-fluid mb-3 rounded" src="${imageUrl}" alt="${p.name}">
-          <div class="star text-warning mb-2">
-            ${'<i class="fas fa-star"></i>'.repeat(5)}
-          </div>
-          <h5 class="p-name">${p.name}</h5>
-          <h4 class="p-price">${formatPrice(p.price)}</h4>
-          <button class="btn btn-primary mt-2">View Product</button>
-        </div>
-      `;
-      productList.appendChild(card);
-    });
-  }
-
-  // View Product Redirect
-  window.viewProduct = (id) => {
-    localStorage.setItem("selectedProductId", id);
-    window.location.href = `sproduct.html?id=${id}`;
-  };
-
-  // Real-time Listener for Firestore
-  const productsRef = collection(db, "products");
-  onSnapshot(productsRef, snapshot => {
-    const products = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    displayProducts(products);
   });
 </script>
 
@@ -259,6 +261,7 @@
                 <li><a href="shop.html">Our store</a></li>
                 <li><a href="cart.html">Cart</a></li>
                 <li><a href="about.html">About Us</a></li>
+                <li><a href="blog.html">Blogs</a></li>
                 <li><a href="admin-dashboard.html">dashboard</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
 

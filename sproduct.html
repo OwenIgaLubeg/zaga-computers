@@ -175,6 +175,7 @@
                 <li class="nav-item"><a class="nav-link" href="shop.html">Our Store</a></li>
                 <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="blog.html">Blogs</a></li>
                 <li class="nav-item"><a class="nav-link" href="admin-dashboard.html">Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link" href="cart.html" title="View Cart"><i class="fas fa-shopping-bag"></i></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" id="authBtn">Sign-In/Up</a></li>
@@ -217,6 +218,7 @@
                 <li><a href="shop.html">Our store</a></li>
                 <li><a href="cart.html">Cart</a></li>
                 <li><a href="about.html">About Us</a></li>
+                <li><a href="blog.html">Blogs</a></li>
                 <li><a href="admin-dashboard.html">Dashboard</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
             </ul>
@@ -270,7 +272,12 @@
 <script type="module">
     import { auth, db } from './js/firebase-config.js';
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { doc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import {
+      subscribeToProduct,
+      formatPrice,
+      parsePrice
+    } from "./js/services/products-service.js";
 
     const params = new URLSearchParams(window.location.search);
     const productId = params.get('id') || localStorage.getItem("selectedProductId");
@@ -282,11 +289,7 @@
     let currentUser = null;
     let currentProduct = null;
     let unsubscribeProduct = null;
-    const parsePrice = (value) => Number(String(value ?? '').replace(/[^0-9.]/g, '')) || 0;
-    const formatPrice = (value) => {
-      const numeric = parsePrice(value);
-      return numeric > 0 ? `UGX ${numeric.toLocaleString()}` : 'UGX 0';
-    };
+    const DEFAULT_IMAGE = 'img/shop/default.jpg';
 
     // Handle authentication state
     onAuthStateChanged(auth, (user) => {
@@ -317,29 +320,23 @@
       }
     }
 
-    // Load product details
-    function subscribeToProduct() {
-      if (!productId) {
-        document.getElementById('productName').textContent = "No product selected";
-        return;
-      }
-
-      if (unsubscribeProduct) {
-        unsubscribeProduct();
-      }
-
-      const docRef = doc(db, "products", productId);
-      unsubscribeProduct = onSnapshot(docRef, (docSnap) => {
+    if (!productId) {
+      document.getElementById('productName').textContent = "No product selected";
+    } else {
+      unsubscribeProduct = subscribeToProduct(productId, (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          currentProduct = { id: productId, ...data };
+          currentProduct = {
+            id: docSnap.id,
+            ...data
+          };
 
-          document.getElementById('productName').textContent = data.name;
+          document.getElementById('productName').textContent = data.name ?? 'Product';
           document.getElementById('productBrand').textContent = `Brand: ${data.brand || 'N/A'}`;
           document.getElementById('productPrice').textContent = formatPrice(data.price);
           document.getElementById('productDescription').textContent = data.description || 'No description available';
 
-          const imageUrl = data.imageUrl || data.imageURL || data.image || 'img/shop/default.jpg';
+          const imageUrl = data.imageUrl || data.imageURL || data.image || DEFAULT_IMAGE;
           document.getElementById('mainImage').src = imageUrl;
 
           const smallImagesContainer = document.getElementById('smallImages');
@@ -379,8 +376,7 @@
 
       try {
         const priceNumber = parsePrice(currentProduct.price);
-
-        const imageUrl = currentProduct.imageUrl || currentProduct.imageURL || currentProduct.image || 'img/shop/default.jpg';
+        const imageUrl = currentProduct.imageUrl || currentProduct.imageURL || currentProduct.image || DEFAULT_IMAGE;
 
         // Add to user's cart
         await addDoc(collection(db, `users/${currentUser.uid}/cart`), {
@@ -414,7 +410,11 @@
       window.location.href = 'shop.html';
     });
 
-    subscribeToProduct();
+    window.addEventListener('beforeunload', () => {
+      if (unsubscribeProduct) {
+        unsubscribeProduct();
+      }
+    });
 </script>
 
 

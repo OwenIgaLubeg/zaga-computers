@@ -117,6 +117,7 @@
                 <li class="nav-item"><a class="nav-link" href="shop.html">Our Store</a></li>
                 <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="blog.html">Blogs</a></li>
                 <li class="nav-item"><a class="nav-link" href="admin-dashboard.html">Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link" href="cart.html" title="View Cart"><i class="fas fa-shopping-bag"></i></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" id="authBtn">Sign-In/Up</a></li>
@@ -169,6 +170,7 @@
                 <li><a href="shop.html">Our store</a></li>
                 <li><a href="cart.html">Cart</a></li>
                 <li><a href="about.html">About Us</a></li>
+                <li><a href="blog.html">Blogs</a></li>
                 <li><a href="admin-dashboard.html">dashboard</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
 
@@ -233,9 +235,9 @@
       deleteDoc,
       doc,
       onSnapshot,
-      addDoc,
-      query
+      addDoc
     } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { parsePrice } from "./js/services/products-service.js";
 
     const cartItemsContainer = document.getElementById("cartItems");
     const grandTotal = document.getElementById("grandTotal");
@@ -246,11 +248,8 @@
 
     let currentUser = null;
     let cartItems = [];
-    const parsePrice = (value) => Number(String(value ?? '').replace(/[^0-9.]/g, '')) || 0;
-    const formatPrice = (value) => {
-      const numeric = parsePrice(value);
-      return numeric > 0 ? numeric.toLocaleString() : '0';
-    };
+
+    const formatCurrency = (value) => parsePrice(value).toLocaleString();
 
     // Handle authentication state
     onAuthStateChanged(auth, (user) => {
@@ -301,12 +300,12 @@
           <tr>
             <td><img src="${item.image || item.imageUrl || 'img/default-product.jpg'}" alt="${item.name}"></td>
             <td>${item.name}</td>
-            <td>${formatPrice(price)}</td>
+            <td>${formatCurrency(price)}</td>
             <td>
               <input type="number" value="${quantity}" min="1" style="width:60px"
                 onchange="updateQuantity('${item.id}', this.value)">
             </td>
-            <td>${formatPrice(itemTotal)}</td>
+            <td>${formatCurrency(itemTotal)}</td>
             <td>
               <button class="btn btn-danger btn-sm" onclick="removeItem('${item.id}')">
                 <i class="fa fa-trash"></i>
@@ -314,7 +313,7 @@
             </td>
           </tr>`;
       });
-      grandTotal.textContent = formatPrice(total);
+      grandTotal.textContent = formatCurrency(total);
     }
 
     // Update quantity
