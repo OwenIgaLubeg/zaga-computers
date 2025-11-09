@@ -14,8 +14,7 @@ import {
   ref,
   uploadBytes,
   getDownloadURL,
-  deleteObject,
-  refFromURL
+  deleteObject
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
 const productsCollection = collection(db, "products");
@@ -32,6 +31,17 @@ export const formatPrice = (value) => {
   return `UGX ${numeric.toLocaleString()}`;
 };
 
+// Helper: Extract storage path from full Firebase URL
+const getStoragePathFromUrl = (url) => {
+  try {
+    const urlObj = new URL(url);
+    const path = urlObj.pathname.split('/o/')[1]?.split('?')[0];
+    return path ? decodeURIComponent(path) : null;
+  } catch (e) {
+    return null;
+  }
+};
+
 const uploadImageIfNeeded = async (file, existingUrl = null) => {
   if (!file) {
     return existingUrl || null;
@@ -41,10 +51,14 @@ const uploadImageIfNeeded = async (file, existingUrl = null) => {
   await uploadBytes(imageRef, file);
   const downloadUrl = await getDownloadURL(imageRef);
 
+  // Delete previous image if exists
   if (existingUrl && existingUrl.startsWith("https://")) {
     try {
-      const previousRef = refFromURL(existingUrl);
-      await deleteObject(previousRef);
+      const path = getStoragePathFromUrl(existingUrl);
+      if (path) {
+        const previousRef = ref(storage, path);
+        await deleteObject(previousRef);
+      }
     } catch (error) {
       console.warn("Previous image cleanup skipped:", error.message);
     }
@@ -105,8 +119,11 @@ export const deleteProduct = async (productId, imageUrl = null) => {
 
   if (imageUrl) {
     try {
-      const imageRef = refFromURL(imageUrl);
-      await deleteObject(imageRef);
+      const path = getStoragePathFromUrl(imageUrl);
+      if (path) {
+        const imageRef = ref(storage, path);
+        await deleteObject(imageRef);
+      }
     } catch (error) {
       console.warn("Image deletion skipped:", error.message);
     }
