@@ -72,8 +72,13 @@
                     <input type="number" id="productPrice" class="form-control" placeholder="Price (UGX)" required>
                 </div>
                 <div class="col-md-6">
-                    <input type="file" id="productImage" class="form-control" accept="image/*">
-                    <small id="imageNote" class="text-muted">Leave empty to keep current image when editing.</small>
+                    <button type="button" class="btn btn-outline-secondary w-100" id="uploadImageButton">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload Image
+                    </button>
+                    <small id="imageNote" class="text-muted d-block mt-1">
+                        Current image: <span id="currentImageStatus">None</span>
+                    </small>
+                    <input type="hidden" id="productImageUrl">
                 </div>
                 <div class="col-12">
                     <textarea id="productDesc" class="form-control" rows="3" placeholder="Product Description" required></textarea>
@@ -169,6 +174,9 @@
     </div>
 </footer>
 
+<!-- ✅ Load Cloudinary Upload Widget -->
+<script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+
 <!-- ✅ Firebase Integration -->
 <script type="module">
     import { auth } from "./js/firebase-config.js";
@@ -184,6 +192,8 @@
     } from "./js/services/products-service.js";
 
     const ADMIN_EMAIL = 'sales2.zagatechnologiesltd@gmail.com';
+    const CLOUD_NAME = 'dfjal56p0';
+    const UPLOAD_PRESET = 'product_images';
 
     const addProductForm = document.getElementById('addProductForm');
     const loadingText = document.getElementById('loadingText');
@@ -193,6 +203,9 @@
     const editProductId = document.getElementById('editProductId');
     const feedbackBanner = document.getElementById('formFeedback');
     const productTableBody = document.getElementById('productTableBody');
+    const uploadImageButton = document.getElementById('uploadImageButton');
+    const productImageUrl = document.getElementById('productImageUrl');
+    const currentImageStatus = document.getElementById('currentImageStatus');
 
     let unsubscribeProducts = null;
     let currentProducts = [];
@@ -203,8 +216,8 @@
     const escapeHtml = (unsafeText = '') =>
       unsafeText
         .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
+        .replace(/</g, '<')
+        .replace(/>/g, '>')
         .replace(/\"/g, '&quot;')
         .replace(/'/g, '&#039;');
 
@@ -225,12 +238,32 @@
 
     const resetForm = () => {
       addProductForm.reset();
+      productImageUrl.value = '';
+      currentImageStatus.textContent = 'None';
       editProductId.value = '';
       editingProduct = null;
       formTitle.textContent = 'Add New Product';
       submitBtn.textContent = 'Add Product';
       cancelEditBtn.classList.add('d-none');
-      document.getElementById('productImage').value = '';
+    };
+
+    const openCloudinaryWidget = () => {
+        const widget = cloudinary.createUploadWidget({
+            cloudName: CLOUD_NAME,
+            uploadPreset: UPLOAD_PRESET,
+            sources: ['local', 'url'],
+            multiple: false,
+            folder: 'products'
+        }, (error, result) => {
+            if (!error && result && result.event === 'success') {
+                productImageUrl.value = result.info.secure_url;
+                currentImageStatus.textContent = 'Uploaded';
+                currentImageStatus.style.color = 'green';
+            } else if (result && result.event === 'abort') {
+                showFeedback('Upload cancelled.', 'info');
+            }
+        });
+        widget.open();
     };
 
     const renderProducts = () => {
@@ -276,6 +309,8 @@
       loadingText.textContent = 'Failed to load products. Please refresh and try again.';
     });
 
+    uploadImageButton.addEventListener('click', openCloudinaryWidget);
+
     addProductForm.addEventListener('submit', async (event) => {
       event.preventDefault();
 
@@ -283,7 +318,8 @@
       const brand = document.getElementById('productBrand').value.trim();
       const rawPrice = document.getElementById('productPrice').value.trim();
       const description = document.getElementById('productDesc').value.trim();
-      const imageFile = document.getElementById('productImage').files[0];
+      const imageUrl = productImageUrl.value.trim();
+
       const price = parsePrice(rawPrice);
 
       if (!name || !brand || !description) {
@@ -296,20 +332,19 @@
         return;
       }
 
+      if (!editingProduct && !imageUrl) {
+        showFeedback('Please upload an image for the product.', 'danger');
+        return;
+      }
+
       try {
         if (!editingProduct) {
-          if (!imageFile) {
-            showFeedback('Please upload an image for the product.', 'danger');
-            return;
-          }
-          await createProduct({ name, brand, price, description }, imageFile);
+          await createProduct({ name, brand, price, description, imageUrl });
           showFeedback('✅ Product added successfully!', 'success');
         } else {
           await updateProduct(
             editingProduct.id,
-            { name, brand, price, description },
-            imageFile || null,
-            editingProduct.imageUrl || null
+            { name, brand, price, description, imageUrl }
           );
           showFeedback('✅ Product updated successfully!', 'success');
         }
@@ -338,6 +373,9 @@
         document.getElementById('productBrand').value = product.brand;
         document.getElementById('productPrice').value = parsePrice(product.price);
         document.getElementById('productDesc').value = product.description;
+        productImageUrl.value = product.imageUrl || '';
+        currentImageStatus.textContent = product.imageUrl ? 'Uploaded' : 'None';
+        currentImageStatus.style.color = product.imageUrl ? 'green' : 'gray';
 
         formTitle.textContent = 'Edit Product';
         submitBtn.textContent = 'Update Product';
@@ -350,7 +388,7 @@
         if (!confirmed) return;
 
         try {
-          await deleteProduct(product.id, product.imageUrl || null);
+          await deleteProduct(product.id);
           showFeedback('🗑️ Product deleted.', 'info');
         } catch (error) {
           console.error('Error deleting product:', error);

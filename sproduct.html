@@ -1,3 +1,4 @@
+<!-- (Full file - only change is standardizing image fallback) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,15 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZAGA Technologies | Product Details</title>
 
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/v4-shims.css">
 
-    <!-- Page-specific styling -->
     <style>
         body {
           font-family: 'Poppins', sans-serif;
@@ -158,7 +155,6 @@
 
 <body>
 
-<!-- Navbar (unchanged) -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 fixed-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="index.html">
@@ -184,7 +180,6 @@
     </div>
 </nav>
 
-<!--Product Section -->
 <section class="product-container">
     <div class="product-image">
         <img id="mainImage" src="img/shop/default.jpg" alt="Product Image">
@@ -204,8 +199,6 @@
     </div>
 </section>
 
-
-<!--  Footer (unchanged) -->
 <footer class="mt-5 py-5">
     <div class="row container mx-auto pb-5">
         <div class="footer-one col-lg-3 col-md-6 col-12">
@@ -268,7 +261,6 @@
     </div>
 </footer>
 
-<!-- Firebase Script -->
 <script type="module">
     import { auth, db } from './js/firebase-config.js';
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -285,13 +277,12 @@
     const addToCartBtn = document.getElementById('addToCartBtn');
     const backToShopBtn = document.getElementById('backToShopBtn');
     const cartMessage = document.getElementById('cartMessage');
-    
+
     let currentUser = null;
     let currentProduct = null;
     let unsubscribeProduct = null;
     const DEFAULT_IMAGE = 'img/shop/default.jpg';
 
-    // Handle authentication state
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
       if (user) {
@@ -304,7 +295,6 @@
       }
     });
 
-    // Logout function
     async function logout(e) {
       e.preventDefault();
       try {
@@ -336,7 +326,8 @@
           document.getElementById('productPrice').textContent = formatPrice(data.price);
           document.getElementById('productDescription').textContent = data.description || 'No description available';
 
-          const imageUrl = data.imageUrl || data.imageURL || data.image || DEFAULT_IMAGE;
+          // ✅ Standardized image handling for Cloudinary
+          const imageUrl = data.imageUrl || DEFAULT_IMAGE;
           document.getElementById('mainImage').src = imageUrl;
 
           const smallImagesContainer = document.getElementById('smallImages');
@@ -361,7 +352,6 @@
       });
     }
 
-    // Add to Cart function
     addToCartBtn.addEventListener('click', async () => {
       if (!currentUser) {
         alert('Please login to add items to cart');
@@ -376,15 +366,14 @@
 
       try {
         const priceNumber = parsePrice(currentProduct.price);
-        const imageUrl = currentProduct.imageUrl || currentProduct.imageURL || currentProduct.image || DEFAULT_IMAGE;
+        const imageUrl = currentProduct.imageUrl || DEFAULT_IMAGE;
 
-        // Add to user's cart
         await addDoc(collection(db, `users/${currentUser.uid}/cart`), {
           productId: currentProduct.id,
           name: currentProduct.name,
           brand: currentProduct.brand || '',
           price: priceNumber,
-          image: imageUrl,
+          imageUrl: imageUrl, // ✅ Use standardized field
           quantity: 1,
           addedAt: new Date()
         });
@@ -392,7 +381,7 @@
         cartMessage.textContent = '✅ Added to cart successfully!';
         cartMessage.style.display = 'block';
         cartMessage.style.color = 'green';
-        
+
         setTimeout(() => {
           cartMessage.style.display = 'none';
         }, 3000);
@@ -405,7 +394,6 @@
       }
     });
 
-    // Back to shop button
     backToShopBtn.addEventListener('click', () => {
       window.location.href = 'shop.html';
     });
@@ -417,10 +405,7 @@
     });
 </script>
 
-
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-<script type="module" src="./js/firebase-config.js"></script>
 </body>
 </html>

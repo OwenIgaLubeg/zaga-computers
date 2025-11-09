@@ -7,9 +7,7 @@
     <title>zaga technologies</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
     <link rel="stylesheet" href="style.css">
-
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/v4-shims.css">
 
@@ -42,7 +40,6 @@
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="index.html">
             <img src="./img/zaga-logo.jpg" alt="ZAGA Technologies Logo" style="height: 40px; width: auto; margin-right: 8px;">
-            <!--<span>ZAGA-TECHNOLOGIES</span>-->
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,41 +47,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
-
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="shop.html">Our Store</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="about.html">About Us</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="contact.html">Contact Us</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="blog.html">Blogs</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="admin-dashboard.html">Dashboard</a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="cart.html" class="nav-link" title="View Cart">
-                        <i class="fas fa-shopping-bag"></i>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#" id="authBtn">Sign-In/Up</a>
-                </li>
-
+                <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="shop.html">Our Store</a></li>
+                <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="blog.html">Blogs</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin-dashboard.html">Dashboard</a></li>
+                <li class="nav-item"><a href="cart.html" class="nav-link" title="View Cart"><i class="fas fa-shopping-bag"></i></a></li>
+                <li class="nav-item"><a class="nav-link" href="#" id="authBtn">Sign-In/Up</a></li>
             </ul>
         </div>
     </div>
@@ -101,113 +71,103 @@
             <!-- Products will load here dynamically -->
         </div>
 
-        <!-- Pagination (Optional for later) -->
         <nav aria-label="Product pages" class="d-flex justify-content-center mt-5">
             <ul class="pagination">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                </li>
+                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">Previous</a></li>
                 <li class="page-item active"><a class="page-link" href="#">1</a></li>
                 <li class="page-item"><a class="page-link" href="#">2</a></li>
                 <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                </li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
             </ul>
         </nav>
     </div>
 </section>
 
-<!-- Script for Dynamic Product Rendering -->
-
-<!-- Firebase Integration & Product Fetch -->
 <script type="module">
-  import { auth } from "./js/firebase-config.js";
-  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import {
-    subscribeToProducts,
-    mapProductDoc,
-    formatPrice
-  } from "./js/services/products-service.js";
+    import { auth } from "./js/firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import {
+      subscribeToProducts,
+      mapProductDoc,
+      formatPrice
+    } from "./js/services/products-service.js";
 
-  const productList = document.getElementById("productList");
-  const authBtn = document.getElementById("authBtn");
-  const DEFAULT_IMAGE = 'img/shop/default.jpg';
-  let unsubscribeProducts = null;
+    const productList = document.getElementById("productList");
+    const authBtn = document.getElementById("authBtn");
+    const DEFAULT_IMAGE = 'img/shop/default.jpg';
+    let unsubscribeProducts = null;
 
-  const renderProducts = (products) => {
-    if (!products.length) {
-      productList.innerHTML = `<p class="text-center text-muted w-100">No products available yet.</p>`;
-      return;
-    }
+    const renderProducts = (products) => {
+      if (!products.length) {
+        productList.innerHTML = `<p class="text-center text-muted w-100">No products available yet.</p>`;
+        return;
+      }
 
-    productList.innerHTML = products.map(product => {
-      const imageUrl = product.imageUrl || DEFAULT_IMAGE;
-      return `
-        <div class="product text-center col-lg-3 col-md-4 col-12">
-          <div class="product-card shadow-sm p-3 bg-white rounded" data-product-id="${product.id}">
-            <img class="img-fluid mb-3 rounded" src="${imageUrl}" alt="${product.name}">
-            <div class="star text-warning mb-2">
-              ${'<i class="fas fa-star"></i>'.repeat(5)}
+      productList.innerHTML = products.map(product => {
+        const imageUrl = product.imageUrl || DEFAULT_IMAGE;
+        return `
+          <div class="product text-center col-lg-3 col-md-4 col-12">
+            <div class="product-card shadow-sm p-3 bg-white rounded" data-product-id="${product.id}">
+              <img class="img-fluid mb-3 rounded" src="${imageUrl}" alt="${product.name}">
+              <div class="star text-warning mb-2">
+                ${'<i class="fas fa-star"></i>'.repeat(5)}
+              </div>
+              <h5 class="p-name">${product.name}</h5>
+              <h4 class="p-price">${formatPrice(product.price)}</h4>
+              <button class="btn btn-primary mt-2" data-product-id="${product.id}">View Product</button>
             </div>
-            <h5 class="p-name">${product.name}</h5>
-            <h4 class="p-price">${formatPrice(product.price)}</h4>
-            <button class="btn btn-primary mt-2" data-product-id="${product.id}">View Product</button>
           </div>
-        </div>
-      `;
-    }).join("");
-  };
+        `;
+      }).join("");
+    };
 
-  productList.addEventListener('click', (event) => {
-    const productCard = event.target.closest('[data-product-id]');
-    if (!productCard) return;
-    const productId = productCard.getAttribute('data-product-id');
-    if (!productId) return;
-    localStorage.setItem("selectedProductId", productId);
-    window.location.href = `sproduct.html?id=${productId}`;
-  });
+    productList.addEventListener('click', (event) => {
+      const productCard = event.target.closest('[data-product-id]');
+      if (!productCard) return;
+      const productId = productCard.getAttribute('data-product-id');
+      localStorage.setItem("selectedProductId", productId);
+      window.location.href = `sproduct.html?id=${productId}`;
+    });
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
-      authBtn.onclick = async (e) => {
-        e.preventDefault();
-        try {
-          await signOut(auth);
-          localStorage.removeItem('userLoggedIn');
-          localStorage.removeItem('adminLoggedIn');
-          localStorage.removeItem('userRole');
-          alert('Logged out successfully');
-          window.location.reload();
-        } catch (error) {
-          console.error('Logout error:', error);
-          alert('Error logging out');
-        }
-      };
-    } else {
-      authBtn.innerHTML = 'Sign-In/Up';
-      authBtn.href = 'login.html';
-      authBtn.onclick = null;
-    }
-  });
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+        authBtn.onclick = async (e) => {
+          e.preventDefault();
+          try {
+            await signOut(auth);
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('userRole');
+            alert('Logged out successfully');
+            window.location.reload();
+          } catch (error) {
+            console.error('Logout error:', error);
+            alert('Error logging out');
+          }
+        };
+      } else {
+        authBtn.innerHTML = 'Sign-In/Up';
+        authBtn.href = 'login.html';
+        authBtn.onclick = null;
+      }
+    });
 
-  unsubscribeProducts = subscribeToProducts((snapshot) => {
-    const products = snapshot.docs.map(mapProductDoc);
-    renderProducts(products);
-  }, (error) => {
-    console.error('Error loading products:', error);
-    productList.innerHTML = `<p class="text-center text-danger w-100">Failed to load products. Please refresh.</p>`;
-  });
+    unsubscribeProducts = subscribeToProducts((snapshot) => {
+      const products = snapshot.docs.map(mapProductDoc);
+      renderProducts(products);
+    }, (error) => {
+      console.error('Error loading products:', error);
+      productList.innerHTML = `<p class="text-center text-danger w-100">Failed to load products. Please refresh.</p>`;
+    });
 
-  window.addEventListener('beforeunload', () => {
-    if (unsubscribeProducts) {
-      unsubscribeProducts();
-    }
-  });
+    window.addEventListener('beforeunload', () => {
+      if (unsubscribeProducts) {
+        unsubscribeProducts();
+      }
+    });
 </script>
 
-<!-- Styling for a better look -->
 <style>
     #featured h2 {
       color: #0d6efd;
@@ -264,7 +224,6 @@
                 <li><a href="blog.html">Blogs</a></li>
                 <li><a href="admin-dashboard.html">dashboard</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
-
             </ul>
         </div>
         <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
@@ -286,11 +245,11 @@
         <div class="footer-one col-lg-3 col-md-6 col-12">
             <h5 class="pb-2">Brand Partners</h5>
             <div class="row">
-                <img class="img-fluid w-25 h-100 m-2"src="img/brand/apple.png" alt="">
-                <img class="img-fluid w-25 h-100 m-2"src="img/brand/samsung.png" alt="">
-                <img class="img-fluid w-25 h-100 m-2"src="img/brand/hp%20logo.png" alt="">
-                <img class="img-fluid w-25 h-100 m-2"src="img/brand/dell.png" alt="">
-                <img class="img-fluid w-25 h-100 m-2"src="img/brand/lenovo.png" alt="">
+                <img class="img-fluid w-25 h-100 m-2" src="img/brand/apple.png" alt="">
+                <img class="img-fluid w-25 h-100 m-2" src="img/brand/samsung.png" alt="">
+                <img class="img-fluid w-25 h-100 m-2" src="img/brand/hp%20logo.png" alt="">
+                <img class="img-fluid w-25 h-100 m-2" src="img/brand/dell.png" alt="">
+                <img class="img-fluid w-25 h-100 m-2" src="img/brand/lenovo.png" alt="">
             </div>
         </div>
     </div>
@@ -311,8 +270,9 @@
         </div>
     </div>
 </footer>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
 <script type="module" src="./js/firebase-config.js"></script>
 
 </body>

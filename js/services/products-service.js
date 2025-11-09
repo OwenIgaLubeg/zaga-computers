@@ -1,4 +1,5 @@
-import { db, storage } from "../firebase-config.js";
+// js/services/products-service.js
+import { db } from "../firebase-config.js";
 import {
   collection,
   addDoc,
@@ -8,18 +9,11 @@ import {
   query,
   orderBy,
   onSnapshot,
-  getDoc
+  getDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
 const productsCollection = collection(db, "products");
-
-const generateImagePath = (file) => `products/${Date.now()}-${file.name}`;
 
 export const parsePrice = (value) => {
   const numeric = Number(String(value ?? "").replace(/[^0-9.]/g, ""));
@@ -29,42 +23,6 @@ export const parsePrice = (value) => {
 export const formatPrice = (value) => {
   const numeric = typeof value === "number" ? value : parsePrice(value);
   return `UGX ${numeric.toLocaleString()}`;
-};
-
-// Helper: Extract storage path from full Firebase URL
-const getStoragePathFromUrl = (url) => {
-  try {
-    const urlObj = new URL(url);
-    const path = urlObj.pathname.split('/o/')[1]?.split('?')[0];
-    return path ? decodeURIComponent(path) : null;
-  } catch (e) {
-    return null;
-  }
-};
-
-const uploadImageIfNeeded = async (file, existingUrl = null) => {
-  if (!file) {
-    return existingUrl || null;
-  }
-
-  const imageRef = ref(storage, generateImagePath(file));
-  await uploadBytes(imageRef, file);
-  const downloadUrl = await getDownloadURL(imageRef);
-
-  // Delete previous image if exists
-  if (existingUrl && existingUrl.startsWith("https://")) {
-    try {
-      const path = getStoragePathFromUrl(existingUrl);
-      if (path) {
-        const previousRef = ref(storage, path);
-        await deleteObject(previousRef);
-      }
-    } catch (error) {
-      console.warn("Previous image cleanup skipped:", error.message);
-    }
-  }
-
-  return downloadUrl;
 };
 
 export const subscribeToProducts = (callback, errorCallback) => {
@@ -85,49 +43,35 @@ export const getProductOnce = async (productId) => {
   return getDoc(productRef);
 };
 
-export const createProduct = async ({ name, brand, price, description }, imageFile) => {
-  const imageUrl = await uploadImageIfNeeded(imageFile);
+export const createProduct = async ({ name, brand, price, description, imageUrl }) => {
   const sanitizedPrice = parsePrice(price);
-
   return addDoc(productsCollection, {
     name,
     brand,
     price: sanitizedPrice,
     description,
-    imageUrl,
-    createdAt: new Date()
+    imageUrl: imageUrl || null,
+    createdAt: serverTimestamp()
   });
 };
 
-export const updateProduct = async (productId, { name, brand, price, description }, imageFile, existingImageUrl = null) => {
+export const updateProduct = async (productId, { name, brand, price, description, imageUrl }) => {
   const productRef = doc(db, "products", productId);
-  const imageUrl = await uploadImageIfNeeded(imageFile, existingImageUrl);
   const sanitizedPrice = parsePrice(price);
-
   return updateDoc(productRef, {
     name,
     brand,
     price: sanitizedPrice,
     description,
-    imageUrl
+    imageUrl: imageUrl || null
   });
 };
 
-export const deleteProduct = async (productId, imageUrl = null) => {
+export const deleteProduct = async (productId) => {
   const productRef = doc(db, "products", productId);
-  await deleteDoc(productRef);
-
-  if (imageUrl) {
-    try {
-      const path = getStoragePathFromUrl(imageUrl);
-      if (path) {
-        const imageRef = ref(storage, path);
-        await deleteObject(imageRef);
-      }
-    } catch (error) {
-      console.warn("Image deletion skipped:", error.message);
-    }
-  }
+  return deleteDoc(productRef);
+  // Note: Cloudinary image cleanup is optional and not done here.
+  // You can delete manually in Cloudinary dashboard if needed.
 };
 
 export const mapProductDoc = (docSnap) => {
@@ -138,7 +82,7 @@ export const mapProductDoc = (docSnap) => {
     brand: data?.brand ?? "",
     price: parsePrice(data?.price),
     description: data?.description ?? "",
-    imageUrl: data?.imageUrl || data?.imageURL || null,
+    imageUrl: data?.imageUrl || null,
     createdAt: data?.createdAt ?? null
   };
 };
