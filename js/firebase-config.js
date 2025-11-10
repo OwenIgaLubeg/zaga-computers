@@ -1,3 +1,4 @@
+// js/firebase-config.js
 // Import Firebase SDKs directly from the CDN (standardized to v11.0.1)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -22,6 +23,6 @@ const analytics = getAnalytics(app);
 
 // Export Firebase services for use across the application
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const db = getFirestore(app);       
 export const storage = getStorage(app);
 export { app as firebaseApp };

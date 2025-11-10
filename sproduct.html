@@ -1,4 +1,3 @@
-<!-- (Full file - only change is standardizing image fallback) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -195,7 +194,7 @@
             <button class="btn btn-primary" id="addToCartBtn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
             <button class="btn btn-secondary" id="backToShopBtn"><i class="fas fa-arrow-left"></i> Back to Shop</button>
         </div>
-        <div id="cartMessage" style="margin-top: 15px; display: none; color: green; font-weight: bold;"></div>
+        <div id="cartMessage" style="margin-top: 15px; display: none; font-weight: bold;"></div>
     </div>
 </section>
 
@@ -283,6 +282,15 @@
     let unsubscribeProduct = null;
     const DEFAULT_IMAGE = 'img/shop/default.jpg';
 
+    const showCartMessage = (message, isSuccess = true) => {
+      cartMessage.textContent = message;
+      cartMessage.style.display = 'block';
+      cartMessage.style.color = isSuccess ? 'green' : 'red';
+      setTimeout(() => {
+        cartMessage.style.display = 'none';
+      }, 3500);
+    };
+
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
       if (user) {
@@ -326,7 +334,6 @@
           document.getElementById('productPrice').textContent = formatPrice(data.price);
           document.getElementById('productDescription').textContent = data.description || 'No description available';
 
-          // ✅ Standardized image handling for Cloudinary
           const imageUrl = data.imageUrl || DEFAULT_IMAGE;
           document.getElementById('mainImage').src = imageUrl;
 
@@ -359,8 +366,15 @@
         return;
       }
 
-      if (!currentProduct) {
-        alert('Product information not loaded');
+      if (!currentProduct || !currentProduct.id) {
+        showCartMessage('❌ Product data unavailable. Please refresh.', false);
+        return;
+      }
+
+      // ✅ Validate db is available
+      if (!db) {
+        showCartMessage('❌ Database not initialized. Please contact support.', false);
+        console.error('Firestore db is not available');
         return;
       }
 
@@ -373,24 +387,16 @@
           name: currentProduct.name,
           brand: currentProduct.brand || '',
           price: priceNumber,
-          imageUrl: imageUrl, // ✅ Use standardized field
+          imageUrl: imageUrl,
           quantity: 1,
           addedAt: new Date()
         });
 
-        cartMessage.textContent = '✅ Added to cart successfully!';
-        cartMessage.style.display = 'block';
-        cartMessage.style.color = 'green';
-
-        setTimeout(() => {
-          cartMessage.style.display = 'none';
-        }, 3000);
+        showCartMessage('✅ Added to cart successfully!');
 
       } catch (error) {
-        console.error('Error adding to cart:', error);
-        cartMessage.textContent = '❌ Error adding to cart';
-        cartMessage.style.display = 'block';
-        cartMessage.style.color = 'red';
+        console.error('Add to cart error:', error);
+        showCartMessage(`❌ Failed: ${error.message || 'Unknown error'}`, false);
       }
     });
 
